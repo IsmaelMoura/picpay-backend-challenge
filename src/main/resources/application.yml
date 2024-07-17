@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: picpay-backend-challenge
+  r2dbc:
+    url: r2dbc:postgresql://${POSTGRES_HOST}:5432/picpay_simplified
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+  flyway:
+    user: ${FLYWAY_USER}
+    password: ${FLYWAY_PASSWORD}
+    url:  jdbc:postgresql://${POSTGRES_HOST}:5432/picpay_simplified

@@ -1,0 +1,9 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/picpay_simplified
+    username: root
+    password: root
+  flyway:
+    user: root
+    password: root
+    url:  jdbc:postgresql://localhost:5432/picpay_simplified
