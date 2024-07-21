@@ -8,7 +8,6 @@ import java.math.BigDecimal
 
 @Component
 class TransferValidator {
-
     @Throws(PicPayException.TransferValidation::class)
     fun validate(request: TransferRequest): TransferRequest {
         val violations = createViolations(request)

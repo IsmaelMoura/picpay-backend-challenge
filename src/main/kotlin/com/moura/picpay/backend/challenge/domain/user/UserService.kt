@@ -13,9 +13,8 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-
     suspend fun createUser(request: CreateUserRequest): User {
         return userRepository.save(request.toEntity()).toDomainUser()
             .also { logger.info { "User [${it.id}] successfully created" } }
@@ -55,25 +54,13 @@ class UserService(
             fullName = fullName,
             password = password,
             type = type,
-            balance = balance
+            balance = balance,
         )
     }
 
     private fun UserEntity.toDomainUser(): User {
         return User(
             id = checkNotNull(id) { "UserId returned null from database" },
-            countrySpecificId = countrySpecificId,
-            email = email,
-            fullName = fullName,
-            password = password,
-            type = type,
-            balance = balance
-        )
-    }
-
-    private fun User.toEntityUser(): UserEntity {
-        return UserEntity(
-            id = id,
             countrySpecificId = countrySpecificId,
             email = email,
             fullName = fullName,

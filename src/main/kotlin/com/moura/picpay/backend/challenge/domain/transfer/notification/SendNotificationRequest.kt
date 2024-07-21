@@ -4,7 +4,7 @@ import com.moura.picpay.backend.challenge.domain.transfer.Transfer
 
 data class SendNotificationRequest(
     val transfer: Transfer,
-    val channels: Set<Channel>
+    val channels: Set<Channel>,
 ) {
     enum class Channel {
         EMAIL,

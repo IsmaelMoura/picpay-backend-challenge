@@ -12,4 +12,4 @@ data class GetUserResponse(
     val email: String,
     val type: UserType,
     val balance: BigDecimal,
-): Serializable
+) : Serializable

@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 private val logger = KotlinLogging.logger {}
 
 class MockTransferAuthorizationService(private val webClient: WebClient) : TransferAuthorizationService {
-
     override suspend fun isAuthorized(): Boolean {
         return runCatching {
             webClient

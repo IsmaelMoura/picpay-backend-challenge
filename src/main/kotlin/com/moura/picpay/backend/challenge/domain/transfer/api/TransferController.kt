@@ -18,9 +18,10 @@ class TransferController(
     private val transferValidator: TransferValidator,
     private val transferService: TransferService,
 ) {
-
     @PostMapping
-    suspend fun sendTransfer(@RequestBody transfer: TransferRequest) {
+    suspend fun sendTransfer(
+        @RequestBody transfer: TransferRequest,
+    ) {
         logger.info { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
 
         transferValidator

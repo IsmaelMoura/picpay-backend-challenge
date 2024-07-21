@@ -9,7 +9,6 @@ private val logger = KotlinLogging.logger {}
 
 @RestControllerAdvice
 class ControllerExceptionHandler {
-
     @ExceptionHandler(PicPayException::class)
     fun handlePicPayException(exception: PicPayException): ProblemDetail {
         return exception

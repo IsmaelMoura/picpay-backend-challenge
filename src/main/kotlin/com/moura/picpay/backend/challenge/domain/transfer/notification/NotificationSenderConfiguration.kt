@@ -12,7 +12,6 @@ import java.util.concurrent.Executors
 
 @Configuration
 class NotificationSenderConfiguration {
-
     @Bean
     fun notificationSender(properties: NotificationSenderProperties): NotificationSender {
         return MockNotificationSender(webClient = WebClient.create(properties.url))
@@ -21,12 +20,12 @@ class NotificationSenderConfiguration {
     @Bean
     fun notificationCoroutineScope(): CoroutineScope {
         return CoroutineScope(
-            Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher()
-                    + CoroutineName("notifications")
-                    + CoroutineExceptionHandler { _, throwable ->
-                val logger = KotlinLogging.logger(javaClass.packageName + ".CoroutineExceptionHandler")
-                logger.error(throwable) { "Uncaught exception in notifications scope (message: ${throwable.message})" }
-            }
+            Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher() +
+                CoroutineName("notifications") +
+                CoroutineExceptionHandler { _, throwable ->
+                    val logger = KotlinLogging.logger(javaClass.packageName + ".CoroutineExceptionHandler")
+                    logger.error(throwable) { "Uncaught exception in notifications scope (message: ${throwable.message})" }
+                },
         )
     }
 }

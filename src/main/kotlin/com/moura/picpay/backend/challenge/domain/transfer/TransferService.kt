@@ -25,9 +25,8 @@ class TransferService(
     private val userService: UserService,
     private val authorizationService: TransferAuthorizationService,
     private val notificationSender: NotificationSender,
-    private val notificationCoroutineScope: CoroutineScope
+    private val notificationCoroutineScope: CoroutineScope,
 ) {
-
     @Transactional
     suspend fun transfer(request: TransferRequest) {
         coroutineScope {
@@ -42,19 +41,24 @@ class TransferService(
 
             val updatedPayee = async { userService.updateUser(payee.await().increaseBalance(request.value)) }
             val updatedPayer = async { userService.updateUser(payer.await().decreaseBalance(request.value)) }
+            val transfer =
+                createTransfer(
+                    request = request,
+                    payee = updatedPayee.await(),
+                    payer = updatedPayer.await(),
+                )
 
-            val transfer = createTransfer(
-                request = request,
-                payee = updatedPayee.await(),
-                payer = updatedPayer.await()
-            )
             notificationCoroutineScope.launch {
                 notificationSender.sendNotification(transfer)
             }
         }
     }
 
-    private suspend fun createTransfer(request: TransferRequest, payee: User, payer: User): Transfer {
+    private suspend fun createTransfer(
+        request: TransferRequest,
+        payee: User,
+        payer: User,
+    ): Transfer {
         return transferRepository
             .save(createTransferEntity(request))
             .toDomainTransfer(payee = payee, payer = payer)
@@ -65,12 +69,12 @@ class TransferService(
         when {
             balance < request.value -> throw PicPayException.UserNotAllowedToTransfer(
                 message = "User balance is not enough to transfer",
-                userId = id
+                userId = id,
             )
 
             type == UserType.MERCHANT -> throw PicPayException.UserNotAllowedToTransfer(
-                message = "User is a merchant and is not allowed to transfer",
-                userId = id
+                message = "User type is ${UserType.MERCHANT} and isn't allowed to transfer",
+                userId = id,
             )
 
             else -> {}
@@ -85,12 +89,15 @@ class TransferService(
         )
     }
 
-    private fun TransferEntity.toDomainTransfer(payee: User, payer: User): Transfer {
+    private fun TransferEntity.toDomainTransfer(
+        payee: User,
+        payer: User,
+    ): Transfer {
         return Transfer(
             id = id,
             payee = payee,
             payer = payer,
-            amount = amount
+            amount = amount,
         )
     }
 }

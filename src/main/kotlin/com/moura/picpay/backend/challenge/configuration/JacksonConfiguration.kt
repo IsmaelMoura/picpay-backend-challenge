@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class JacksonConfiguration {
-
     @Bean
     fun objectMapper(): ObjectMapper {
         return JsonMapper
@@ -22,7 +21,7 @@ class JacksonConfiguration {
                     .configure(KotlinFeature.NullIsSameAsDefault, true)
                     .configure(KotlinFeature.SingletonSupport, true)
                     .configure(KotlinFeature.StrictNullChecks, true)
-                    .build()
+                    .build(),
             )
             .addModule(JavaTimeModule())
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)

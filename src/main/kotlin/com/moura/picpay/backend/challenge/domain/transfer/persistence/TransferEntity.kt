@@ -14,9 +14,6 @@ data class TransferEntity(
     val payeeId: UserId,
     val payerId: UserId,
     val amount: BigDecimal,
-
     @CreatedDate
     val createdAt: Instant? = null,
 ) : Serializable
-
-

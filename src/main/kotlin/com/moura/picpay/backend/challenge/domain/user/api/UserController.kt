@@ -8,7 +8,12 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 private val logger = KotlinLogging.logger {}
@@ -18,9 +23,10 @@ private val logger = KotlinLogging.logger {}
 class UserController(
     private val userService: UserService,
 ) {
-
     @PostMapping
-    suspend fun createUser(@RequestBody request: CreateUserRequest): ResponseEntity<Unit> {
+    suspend fun createUser(
+        @RequestBody request: CreateUserRequest,
+    ): ResponseEntity<Unit> {
         return userService
             .also { logger.info { "Received create user request (userType: [${request.type}])" } }
             .createUser(request)
@@ -32,7 +38,9 @@ class UserController(
     }
 
     @GetMapping("/{id}")
-    suspend fun getUserById(@PathVariable id: UserId): ResponseEntity<GetUserResponse> {
+    suspend fun getUserById(
+        @PathVariable id: UserId,
+    ): ResponseEntity<GetUserResponse> {
         return userService.getById(id)
             .toGetUserResponse()
             .let { ResponseEntity.ok(it) }
@@ -52,7 +60,7 @@ class UserController(
             fullName = fullName,
             email = email,
             type = type,
-            balance = balance
+            balance = balance,
         )
     }
 }

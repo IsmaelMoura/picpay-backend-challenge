@@ -11,4 +11,4 @@ data class CreateUserRequest(
     val password: String,
     val type: UserType,
     val balance: BigDecimal = BigDecimal.ZERO,
-): Serializable
+) : Serializable

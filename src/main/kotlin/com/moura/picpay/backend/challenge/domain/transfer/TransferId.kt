@@ -7,7 +7,6 @@ import java.io.Serializable
 
 @JvmInline
 value class TransferId private constructor(val value: String) : Serializable {
-
     @Component
     object ToStringConverter : Converter<TransferId, String> {
         override fun convert(source: TransferId): String {

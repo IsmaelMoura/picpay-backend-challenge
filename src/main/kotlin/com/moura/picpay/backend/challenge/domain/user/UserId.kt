@@ -6,7 +6,6 @@ import java.io.Serializable
 
 @JvmInline
 value class UserId(val value: Long) : Serializable {
-
     @Component
     object ToLongConverter : Converter<UserId, Long> {
         override fun convert(source: UserId): Long {

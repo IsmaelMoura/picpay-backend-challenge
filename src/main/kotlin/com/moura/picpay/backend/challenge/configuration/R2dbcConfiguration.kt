@@ -10,7 +10,6 @@ import org.springframework.data.r2dbc.dialect.DialectResolver
 
 @Configuration
 class R2dbcConfiguration {
-
     @Bean
     fun r2dbcCustomConversions(connectionFactory: ConnectionFactory): R2dbcCustomConversions {
         return R2dbcCustomConversions.of(
@@ -20,7 +19,7 @@ class R2dbcConfiguration {
                 UserId.FromLongConverter,
                 TransferId.ToStringConverter,
                 TransferId.FromStringConverter,
-            )
+            ),
         )
     }
 }

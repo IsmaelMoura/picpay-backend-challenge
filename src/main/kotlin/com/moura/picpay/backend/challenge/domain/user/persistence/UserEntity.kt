@@ -19,7 +19,6 @@ data class UserEntity(
     val password: String,
     val type: UserType,
     val balance: BigDecimal,
-
     @CreatedDate
     val createdAt: Instant? = null,
 ) : Serializable

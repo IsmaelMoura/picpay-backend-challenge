@@ -11,9 +11,8 @@ data class User(
     val type: UserType,
     val balance: BigDecimal,
 ) {
-
     fun increaseBalance(amount: BigDecimal): User {
-       return copy(balance = balance + amount)
+        return copy(balance = balance + amount)
     }
 
     fun decreaseBalance(amount: BigDecimal): User {

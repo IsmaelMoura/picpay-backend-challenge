@@ -6,17 +6,15 @@ import org.springframework.http.ProblemDetail
 
 sealed class PicPayException(
     override val message: String,
-    private val status: HttpStatus
+    private val status: HttpStatus,
 ) : RuntimeException(message) {
-
     open fun toProblemDetail(): ProblemDetail {
         return ProblemDetail.forStatusAndDetail(status, message)
     }
 
     class TransferValidation(
-        private val errors: Set<FieldViolation>
+        private val errors: Set<FieldViolation>,
     ) : PicPayException("Transfer request is invalid.", HttpStatus.BAD_REQUEST) {
-
         data class FieldViolation(val field: String, val description: String)
 
         override fun toProblemDetail(): ProblemDetail {
@@ -31,16 +29,14 @@ sealed class PicPayException(
 
     class UserNotAllowedToTransfer(
         message: String,
-        private val userId: UserId
+        private val userId: UserId,
     ) : PicPayException(message, HttpStatus.BAD_REQUEST) {
-
         override fun toProblemDetail(): ProblemDetail {
             return super.toProblemDetail().apply { setProperty("user_id", userId) }
         }
     }
 
     class UserNotFound(private val userId: UserId) : PicPayException("User does not exist.", HttpStatus.NOT_FOUND) {
-
         override fun toProblemDetail(): ProblemDetail {
             return super.toProblemDetail().apply { setProperty("user_id", userId) }
         }

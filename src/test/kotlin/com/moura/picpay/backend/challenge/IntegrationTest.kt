@@ -14,7 +14,6 @@ import java.io.File
 @Tag("integrationTest")
 @ActiveProfiles("test")
 class IntegrationTest {
-
     private object Container : ComposeContainer(File("docker-compose.yaml")) {
         private const val POSTGRES_SERVICE_NAME = "postgres"
         private const val POSTGRES_PORT = 5432
@@ -47,7 +46,6 @@ class IntegrationTest {
     }
 
     companion object {
-
         @Suppress("unused")
         @JvmStatic
         @DynamicPropertySource

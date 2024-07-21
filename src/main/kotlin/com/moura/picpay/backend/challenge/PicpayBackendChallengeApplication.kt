@@ -11,5 +11,5 @@ import org.springframework.boot.runApplication
 class PicpayBackendChallengeApplication
 
 fun main(args: Array<String>) {
-	runApplication<PicpayBackendChallengeApplication>(*args)
+    runApplication<PicpayBackendChallengeApplication>(*args)
 }

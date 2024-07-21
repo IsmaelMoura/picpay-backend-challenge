@@ -8,15 +8,14 @@ import org.springframework.web.reactive.function.client.WebClient
 private val logger = KotlinLogging.logger {}
 
 class MockNotificationSender(private val webClient: WebClient) : NotificationSender {
-
     override suspend fun sendNotification(transfer: Transfer): SendResult {
         return sendCatching {
             webClient.post()
                 .bodyValue(
                     SendNotificationRequest(
                         transfer = transfer,
-                        channels = setOf(SendNotificationRequest.Channel.SMS, SendNotificationRequest.Channel.EMAIL)
-                    )
+                        channels = setOf(SendNotificationRequest.Channel.SMS, SendNotificationRequest.Channel.EMAIL),
+                    ),
                 )
                 .also {
                     logger.info { "Sending notification request for transfer [${transfer.id}]" }
