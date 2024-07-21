@@ -1,9 +1,18 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:16.3-alpine'
     ports:
       - '5432:5432'
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: picpay_simplified
+
+  mockoon:
+    hostname: mockoon
+    image: mockoon/cli:8.3.0
+    command: [ "--data" , "data", "--port", "9090" ]
+    volumes:
+      - ./src/test/resources/mocks.json:/data
+    ports:
+      - "9090:9090"

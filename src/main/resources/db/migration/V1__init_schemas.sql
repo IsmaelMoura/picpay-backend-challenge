@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users
     created_at          TIMESTAMP      NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS transactions
+CREATE TABLE IF NOT EXISTS transfers
 (
     id         VARCHAR(26)    NOT NULL UNIQUE PRIMARY KEY,
     payee_id   BIGINT         NOT NULL REFERENCES users (id),

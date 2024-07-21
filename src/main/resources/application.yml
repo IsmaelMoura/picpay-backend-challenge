@@ -8,4 +8,14 @@ spring:
   flyway:
     user: ${FLYWAY_USER}
     password: ${FLYWAY_PASSWORD}
-    url:  jdbc:postgresql://${POSTGRES_HOST}:5432/picpay_simplified
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/picpay_simplified
+  threads:
+    virtual:
+      enabled: true
+
+picpay-backend-challenge:
+  transfer:
+    authorization:
+      url: ${TRANSFER_AUTHORIZATION_HOST}/api/v1/transfers/authorization
+    notification:
+      url: ${TRANSFER_NOTIFICATION_HOST}/api/v1/transfers/notification

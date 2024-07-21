@@ -7,3 +7,10 @@ spring:
     user: root
     password: root
     url:  jdbc:postgresql://localhost:5432/picpay_simplified
+
+picpay-backend-challenge:
+  transfer:
+    authorization:
+      url: http://localhost:9090/api/v1/transfers/authorization
+    notification:
+      url: http://localhost:9090/api/v1/transfers/notification

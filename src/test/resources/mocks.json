@@ -1,0 +1,125 @@
+{
+  "uuid": "0b119558-5bff-4a50-a9de-74c749cab54b",
+  "lastMigration": 32,
+  "name": "Mocks",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "2c5c7ce0-e552-4486-a8e9-14712aa0b6c1",
+      "type": "http",
+      "documentation": "Transfer Authorization endpoints",
+      "method": "get",
+      "endpoint": "api/v1/transfers/authorization",
+      "responses": [
+        {
+          "uuid": "e503d67a-bc2a-43fb-ae48-8eaba82c36b7",
+          "body": "{\n  \"data\": {\n    \"authorization\": true\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Transfer authorized",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "054d5947-9092-4421-91f0-2c648d543b46",
+      "type": "http",
+      "documentation": "Notification service",
+      "method": "post",
+      "endpoint": "api/v1/transfers/notification",
+      "responses": [
+        {
+          "uuid": "ac5d78ba-7b7c-4641-b9cc-f142b2506432",
+          "body": "",
+          "latency": 1000,
+          "statusCode": 202,
+          "label": "Successfully sent notification",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "2c5c7ce0-e552-4486-a8e9-14712aa0b6c1"
+    },
+    {
+      "type": "route",
+      "uuid": "054d5947-9092-4421-91f0-2c648d543b46"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
