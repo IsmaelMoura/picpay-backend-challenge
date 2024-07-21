@@ -11,6 +11,6 @@ spring:
 picpay-backend-challenge:
   transfer:
     authorization:
-      url: http://localhost:9090/api/v1/transfers/authorization
+      host: http://localhost:9090
     notification:
-      url: http://localhost:9090/api/v1/transfers/notification
+      host: http://localhost:9090

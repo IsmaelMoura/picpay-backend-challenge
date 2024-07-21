@@ -1,5 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.user
 
+import org.jetbrains.annotations.TestOnly
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import java.io.Serializable
@@ -19,4 +20,7 @@ value class UserId(val value: Long) : Serializable {
             return UserId(source)
         }
     }
+
+    @TestOnly
+    companion object
 }

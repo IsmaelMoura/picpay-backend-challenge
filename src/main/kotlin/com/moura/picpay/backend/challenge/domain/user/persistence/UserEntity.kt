@@ -4,6 +4,7 @@ import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.UserType
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Table
 import java.io.Serializable
 import java.math.BigDecimal
@@ -21,4 +22,6 @@ data class UserEntity(
     val balance: BigDecimal,
     @CreatedDate
     val createdAt: Instant? = null,
+    @LastModifiedDate
+    val modifiedAt: Instant? = null,
 ) : Serializable

@@ -12,11 +12,11 @@ sealed class PicPayException(
         return ProblemDetail.forStatusAndDetail(status, message)
     }
 
+    data class FieldViolation(val field: String, val description: String)
+
     class TransferValidation(
         private val errors: Set<FieldViolation>,
     ) : PicPayException("Transfer request is invalid.", HttpStatus.BAD_REQUEST) {
-        data class FieldViolation(val field: String, val description: String)
-
         override fun toProblemDetail(): ProblemDetail {
             return super.toProblemDetail()
                 .apply {
@@ -39,6 +39,17 @@ sealed class PicPayException(
     class UserNotFound(private val userId: UserId) : PicPayException("User does not exist.", HttpStatus.NOT_FOUND) {
         override fun toProblemDetail(): ProblemDetail {
             return super.toProblemDetail().apply { setProperty("user_id", userId) }
+        }
+    }
+
+    class CreateUserValidation(
+        private val errors: Set<FieldViolation>,
+    ) : PicPayException("Create user request is invalid.", HttpStatus.BAD_REQUEST) {
+        override fun toProblemDetail(): ProblemDetail {
+            return super.toProblemDetail()
+                .apply {
+                    setProperty("field_violations", errors)
+                }
         }
     }
 }

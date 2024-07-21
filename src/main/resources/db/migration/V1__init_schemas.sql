@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users
     password            VARCHAR(255)   NOT NULL,
     type                user_type      NOT NULL,
     balance             NUMERIC(15, 2) NOT NULL,
-    created_at          TIMESTAMP      NOT NULL DEFAULT now()
+    created_at          TIMESTAMP      NOT NULL DEFAULT now(),
+    modified_at         TIMESTAMP      NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transfers
