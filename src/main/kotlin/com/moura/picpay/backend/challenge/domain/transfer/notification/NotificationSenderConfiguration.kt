@@ -14,7 +14,7 @@ import java.util.concurrent.Executors
 class NotificationSenderConfiguration {
     @Bean
     fun notificationSender(properties: NotificationSenderProperties): NotificationSender {
-        return MockNotificationSender(webClient = WebClient.create(properties.url))
+        return MockNotificationSender(webClient = WebClient.create(properties.baseUrl))
     }
 
     @Bean

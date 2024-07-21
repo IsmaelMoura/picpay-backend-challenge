@@ -9,7 +9,7 @@ class TransferAuthorizationConfiguration {
     @Bean
     fun transferAuthorizationService(properties: AuthorizationServiceProperties): TransferAuthorizationService {
         return MockTransferAuthorizationService(
-            webClient = WebClient.create(properties.url),
+            webClient = WebClient.create(properties.baseUrl),
         )
     }
 }

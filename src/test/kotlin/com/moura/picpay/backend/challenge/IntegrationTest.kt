@@ -34,8 +34,7 @@ class IntegrationTest {
             private val serviceHost = getServiceHost(MOCKOON_SERVICE_NAME, MOCKOON_PORT)
             private val servicePort = getServicePort(MOCKOON_SERVICE_NAME, MOCKOON_PORT)
 
-            val transferAuthorizationUrl = "http://$serviceHost:$servicePort/api/v1/transfers/authorization"
-            val transferNotificationUrl = "http://$serviceHost:$servicePort/api/v1/transfers/notification"
+            val host = "http://$serviceHost:$servicePort"
         }
 
         init {
@@ -54,11 +53,11 @@ class IntegrationTest {
             registry.add("spring.r2dbc.username", Container.Postgres::USERNAME)
             registry.add("spring.r2dbc.password", Container.Postgres::PASSWORD)
             registry.add("spring.flyway.url", Container.Postgres::flywayUrl)
-            registry.add("spring.flyway.username", Container.Postgres::USERNAME)
+            registry.add("spring.flyway.user", Container.Postgres::USERNAME)
             registry.add("spring.flyway.password", Container.Postgres::PASSWORD)
 
-            registry.add("picpay-backend-challenge.transfer.authorization.url", Container.Mockoon::transferAuthorizationUrl)
-            registry.add("picpay-backend-challenge.transfer.notification.url", Container.Mockoon::transferNotificationUrl)
+            registry.add("picpay-backend-challenge.transfer.authorization.host", Container.Mockoon::host)
+            registry.add("picpay-backend-challenge.transfer.notification.host", Container.Mockoon::host)
         }
     }
 }

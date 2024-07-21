@@ -16,6 +16,8 @@ spring:
 picpay-backend-challenge:
   transfer:
     authorization:
-      url: ${TRANSFER_AUTHORIZATION_HOST}/api/v1/transfers/authorization
+      host: ${TRANSFER_AUTHORIZATION_HOST}
+      path: /api/v1/transfers/authorization
     notification:
-      url: ${TRANSFER_NOTIFICATION_HOST}/api/v1/transfers/notification
+      host: ${TRANSFER_NOTIFICATION_HOST}
+      path: /api/v1/transfers/notification
