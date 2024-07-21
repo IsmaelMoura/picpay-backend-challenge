@@ -4,7 +4,6 @@ import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserEntity
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
-import com.moura.picpay.backend.challenge.domain.user.validation.UserValidator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,11 +14,9 @@ private val logger = KotlinLogging.logger {}
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val userValidator: UserValidator,
 ) {
     suspend fun createUser(request: CreateUserRequest): User {
-        return userValidator.validate(request)
-            .let { userRepository.save(it.toEntity()) }
+        return userRepository.save(request.toEntity())
             .toDomainUser()
             .also { logger.info { "User [${it.id}] successfully created" } }
     }
