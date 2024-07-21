@@ -5,6 +5,8 @@ import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserEntity
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.springframework.stereotype.Service
 
 private val logger = KotlinLogging.logger {}
@@ -40,6 +42,10 @@ class UserService(
             .let { userRepository.save(it) }
             .toDomainUser()
             .also { logger.info { "User [${user.id}] successfully updated" } }
+    }
+
+    fun getAllUsers(): Flow<User> {
+        return userRepository.findAll().map { it.toDomainUser() }
     }
 
     private fun CreateUserRequest.toEntity(): UserEntity {
