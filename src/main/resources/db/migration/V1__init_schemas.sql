@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
     email               VARCHAR(128)   NOT NULL UNIQUE,
     password            VARCHAR(255)   NOT NULL,
     type                user_type      NOT NULL,
-    balance             NUMERIC(15, 2) NOT NULL,
+    balance             NUMERIC NOT NULL,
     created_at          TIMESTAMP      NOT NULL DEFAULT now(),
     modified_at         TIMESTAMP      NOT NULL
 );
@@ -20,6 +20,6 @@ CREATE TABLE IF NOT EXISTS transfers
     id         VARCHAR(26)    NOT NULL UNIQUE PRIMARY KEY,
     payee_id   BIGINT         NOT NULL REFERENCES users (id),
     payer_id   BIGINT         NOT NULL REFERENCES users (id),
-    amount     NUMERIC(15, 2) NOT NULL,
+    amount     NUMERIC NOT NULL,
     created_at TIMESTAMP      NOT NULL DEFAULT now()
 );
