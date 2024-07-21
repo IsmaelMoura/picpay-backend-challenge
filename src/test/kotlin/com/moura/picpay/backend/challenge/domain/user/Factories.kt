@@ -1,6 +1,5 @@
 package com.moura.picpay.backend.challenge.domain.user
 
-import com.moura.picpay.backend.challenge.domain.money.MAX_SUPPORTED_AMOUNT_VALUE
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import io.azam.ulidj.ULID
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -13,7 +12,7 @@ fun CreateUserRequest.Companion.create(
     email: String = randomAlphabetic(10, 20) + "@email.com",
     password: String = ULID.random(),
     type: UserType = UserType.entries.random(),
-    balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble(MAX_SUPPORTED_AMOUNT_VALUE.toDouble())),
+    balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
 ): CreateUserRequest {
     return CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
 }
