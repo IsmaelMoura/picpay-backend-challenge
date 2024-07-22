@@ -1,5 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.user.persistence
 
+import com.moura.picpay.backend.challenge.domain.user.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.UserType
 import org.springframework.data.annotation.CreatedDate
@@ -14,7 +15,7 @@ import java.time.Instant
 data class UserEntity(
     @Id
     val id: UserId? = null,
-    val countrySpecificId: String,
+    val countrySpecificId: CountrySpecificId,
     val fullName: String,
     val email: String,
     val password: String,

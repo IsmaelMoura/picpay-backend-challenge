@@ -33,13 +33,10 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should create user successfully`() =
         runTest {
-            // given
             val request = CreateUserRequest.create()
 
-            // when
             val user = underTest.createUser(request)
 
-            // then
             user.id shouldNotBe null
             user.countrySpecificId shouldBe request.countrySpecificId
             user.fullName shouldBe request.fullName
@@ -54,23 +51,18 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should get user by id successfully`() =
         runTest {
-            // given
             val user = underTest.createUser(CreateUserRequest.create())
 
-            // when
             val result = underTest.getById(user.id)
 
-            // then
             result shouldBeEqual user
         }
 
     @Test
     fun `should throw UserNotFound when user does not exist`() =
         runTest {
-            // given
             val user = UserId.random()
 
-            // when
             // should
             shouldThrow<PicPayException.UserNotFound> { underTest.getById(user) }
         }
@@ -78,11 +70,10 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should update user correctly`() =
         runTest {
-            // given
             val user = underTest.createUser(CreateUserRequest.create())
             val update =
                 user.copy(
-                    countrySpecificId = ULID.random(),
+                    countrySpecificId = CountrySpecificId.random(),
                     fullName = randomAlphabetic(20),
                     email = randomAlphabetic(20),
                     password = ULID.random(),
@@ -90,10 +81,8 @@ class UserServiceIntegrationTest : IntegrationTest() {
                     balance = BigDecimal.valueOf(200),
                 )
 
-            // when
             val result = underTest.updateUser(update)
 
-            // then
             result shouldNotBeEqual user
             result.id shouldBeEqual user.id shouldBeEqual update.id
             result.countrySpecificId shouldBe update.countrySpecificId
@@ -114,15 +103,12 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should update modifiedAt when update user correctly`() =
         runTest {
-            // given
             val user = underTest.createUser(CreateUserRequest.create())
             val update = user.copy(balance = BigDecimal.valueOf(200))
 
-            // when
             delay(1000)
             val result = underTest.updateUser(update)
 
-            // then
             userRepository
                 .findById(result.id)
                 .shouldNotBeNull {
@@ -133,12 +119,10 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should return all user successfully`() =
         runTest {
-            // given
             val ids =
                 List(Random.nextInt(10, 20)) { CreateUserRequest.create() }
                     .map { underTest.createUser(it).id }
 
-            // when
             val result = underTest.getAllUsers().toList()
 
             result.map(User::id).shouldContainAll(ids)
@@ -147,13 +131,10 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should return empty flow when there are no users`() =
         runTest {
-            // given
             userRepository.deleteAll()
 
-            // when
             val result = underTest.getAllUsers().toList()
 
-            // then
             result.shouldBeEmpty()
         }
 }

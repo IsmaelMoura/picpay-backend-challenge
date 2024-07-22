@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 data class User(
     val id: UserId,
-    val countrySpecificId: String,
+    val countrySpecificId: CountrySpecificId,
     val fullName: String,
     val email: String,
     val password: String,

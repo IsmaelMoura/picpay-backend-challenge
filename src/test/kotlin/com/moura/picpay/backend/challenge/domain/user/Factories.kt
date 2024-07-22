@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import kotlin.random.Random
 
 fun CreateUserRequest.Companion.create(
-    countrySpecificId: String = ULID.random(),
+    countrySpecificId: CountrySpecificId = CountrySpecificId.random(),
     fullName: String = randomAlphabetic(10, 20),
     email: String = randomAlphabetic(10, 20) + "@email.com",
     password: String = ULID.random(),
@@ -19,9 +19,11 @@ fun CreateUserRequest.Companion.create(
 
 fun UserId.Companion.random() = UserId(Random.nextLong(1, Long.MAX_VALUE))
 
+fun CountrySpecificId.Companion.random() = CountrySpecificId(ULID.random())
+
 fun User.Companion.create(
     id: UserId = UserId.random(),
-    countrySpecificId: String = ULID.random(),
+    countrySpecificId: CountrySpecificId = CountrySpecificId.random(),
     fullName: String = randomAlphabetic(10, 20),
     email: String = randomAlphabetic(10, 20) + "@email.com",
     password: String = ULID.random(),

@@ -12,7 +12,7 @@ class ControllerExceptionHandler {
     @ExceptionHandler(PicPayException::class)
     fun handlePicPayException(exception: PicPayException): ProblemDetail {
         return exception
-            .also { logger.warn { "Handling exception (message: ${it.message})" } }
+            .also { logger.warn(exception) { "Handling exception (message: ${it.message})" } }
             .toProblemDetail()
     }
 }
