@@ -1,5 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.user
 
+import org.jetbrains.annotations.TestOnly
 import java.math.BigDecimal
 
 data class User(
@@ -11,11 +12,11 @@ data class User(
     val type: UserType,
     val balance: BigDecimal,
 ) {
-    fun increaseBalance(amount: BigDecimal): User {
+    fun withIncreasedBalance(amount: BigDecimal): User {
         return copy(balance = balance + amount)
     }
 
-    fun decreaseBalance(amount: BigDecimal): User {
+    fun withDecreasedBalance(amount: BigDecimal): User {
         return copy(balance = balance - amount)
     }
 
@@ -46,4 +47,7 @@ data class User(
         result = 31 * result + balance.hashCode()
         return result
     }
+
+    @TestOnly
+    companion object
 }

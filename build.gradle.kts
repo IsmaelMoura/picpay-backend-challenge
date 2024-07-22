@@ -62,8 +62,20 @@ kotlin {
     }
 }
 
+val integrationTest: TaskProvider<Test> =
+    tasks.register<Test>("integrationTest") {
+        group = "verification"
+        description = "Execute all integration tests"
+
+        useJUnitPlatform {
+            includeTags.add("integrationTest")
+        }
+    }
+
 tasks {
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            excludeTags.add(integrationTest.name)
+        }
     }
 }

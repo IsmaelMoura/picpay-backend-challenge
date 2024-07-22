@@ -8,11 +8,14 @@ import io.azam.ulidj.ULID
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.date.shouldBeAfter
+import io.kotest.matchers.date.shouldBeBefore
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.equals.shouldNotBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
@@ -106,6 +109,25 @@ class UserServiceIntegrationTest : IntegrationTest() {
                 .shouldNotBeNull {
                     createdAt.shouldNotBeNull()
                     modifiedAt.shouldNotBeNull()
+                }
+        }
+
+    @Test
+    fun `should update modifiedAt when update user correctly`() =
+        runTest {
+            // given
+            val user = underTest.createUser(CreateUserRequest.create())
+            val update = user.copy(balance = BigDecimal.valueOf(200))
+
+            // when
+            delay(1000)
+            val result = underTest.updateUser(update)
+
+            // then
+            userRepository
+                .findById(result.id)
+                .shouldNotBeNull {
+                    createdAt.shouldNotBeNull() shouldBeBefore modifiedAt.shouldNotBeNull()
                 }
         }
 

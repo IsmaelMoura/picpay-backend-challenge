@@ -39,8 +39,8 @@ class TransferService(
                 throw PicPayException.TransferAuthorization("Transfer was not authorized")
             }
 
-            val updatedPayee = async { userService.updateUser(payee.await().increaseBalance(request.value)) }
-            val updatedPayer = async { userService.updateUser(payer.await().decreaseBalance(request.value)) }
+            val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
+            val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
             val transfer =
                 createTransfer(
                     request = request,

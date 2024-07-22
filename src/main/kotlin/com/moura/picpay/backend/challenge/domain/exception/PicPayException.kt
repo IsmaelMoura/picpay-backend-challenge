@@ -41,15 +41,4 @@ sealed class PicPayException(
             return super.toProblemDetail().apply { setProperty("user_id", userId) }
         }
     }
-
-    class CreateUserValidation(
-        private val errors: Set<FieldViolation>,
-    ) : PicPayException("Create user request is invalid.", HttpStatus.BAD_REQUEST) {
-        override fun toProblemDetail(): ProblemDetail {
-            return super.toProblemDetail()
-                .apply {
-                    setProperty("field_violations", errors)
-                }
-        }
-    }
 }

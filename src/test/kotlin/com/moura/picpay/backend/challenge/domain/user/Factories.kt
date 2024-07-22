@@ -18,3 +18,23 @@ fun CreateUserRequest.Companion.create(
 }
 
 fun UserId.Companion.random() = UserId(Random.nextLong(1, Long.MAX_VALUE))
+
+fun User.Companion.create(
+    id: UserId = UserId.random(),
+    countrySpecificId: String = ULID.random(),
+    fullName: String = randomAlphabetic(10, 20),
+    email: String = randomAlphabetic(10, 20) + "@email.com",
+    password: String = ULID.random(),
+    type: UserType = UserType.entries.random(),
+    balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
+): User {
+    return User(
+        id = id,
+        countrySpecificId = countrySpecificId,
+        fullName = fullName,
+        email = email,
+        password = password,
+        type = type,
+        balance = balance,
+    )
+}
