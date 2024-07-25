@@ -18,7 +18,7 @@ class NotificationSenderConfiguration {
     }
 
     @Bean
-    fun notificationCoroutineScope(): CoroutineScope {
+    fun notificationScope(): CoroutineScope {
         return CoroutineScope(
             Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher() +
                 CoroutineName("notifications") +

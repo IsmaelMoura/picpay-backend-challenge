@@ -40,3 +40,15 @@ fun User.Companion.create(
         balance = balance,
     )
 }
+
+fun User.Companion.createFrom(request: CreateUserRequest): User {
+    return with(request) {
+        create(
+            countrySpecificId = countrySpecificId,
+            fullName = fullName,
+            email = email,
+            password = password,
+            type = type,
+        )
+    }
+}

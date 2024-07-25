@@ -25,7 +25,7 @@ class TransferService(
     private val userService: UserService,
     private val authorizationService: TransferAuthorizationService,
     private val notificationSender: NotificationSender,
-    private val notificationCoroutineScope: CoroutineScope,
+    private val notificationScope: CoroutineScope,
 ) {
     @Transactional
     suspend fun transfer(request: TransferRequest) {
@@ -48,7 +48,7 @@ class TransferService(
                     payer = updatedPayer.await(),
                 )
 
-            notificationCoroutineScope.launch {
+            notificationScope.launch {
                 notificationSender.sendNotification(transfer)
             }
         }

@@ -1,6 +1,5 @@
 package com.moura.picpay.backend.challenge.domain.user
 
-import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -15,7 +14,6 @@ class UserTest {
 
         val increased = user.withIncreasedBalance(amountToIncrease)
 
-        user shouldBeEqual user
         increased.balance shouldBe user.balance + amountToIncrease
     }
 
@@ -27,7 +25,6 @@ class UserTest {
 
         val increased = user.withDecreasedBalance(amountToDecrease)
 
-        user shouldBeEqual user
         increased.balance shouldBe user.balance - amountToDecrease
     }
 }

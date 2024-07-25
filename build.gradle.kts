@@ -29,6 +29,7 @@ val kotlinLoggingJvmVersion: String by project
 val ulidjVersion: String by project
 val kotestVersion: String by project
 val apacheCommonsVersion: String by project
+val springMockkVersion: String by project
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
@@ -53,6 +54,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("org.apache.commons:commons-lang3:$apacheCommonsVersion")
+    testImplementation("com.ninja-squad:springmockk:$springMockkVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
