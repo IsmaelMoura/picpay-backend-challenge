@@ -1,31 +1,17 @@
 package com.moura.picpay.backend.challenge.domain.user
 
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.utils.randomEmail
+import com.moura.picpay.backend.challenge.utils.randomFullName
 import io.azam.ulidj.ULID
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import java.math.BigDecimal
 import kotlin.random.Random
-
-fun CreateUserRequest.Companion.create(
-    countrySpecificId: CountrySpecificId = CountrySpecificId.random(),
-    fullName: String = randomAlphabetic(10, 20),
-    email: String = randomAlphabetic(10, 20) + "@email.com",
-    password: String = ULID.random(),
-    type: UserType = UserType.entries.random(),
-    balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
-): CreateUserRequest {
-    return CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
-}
-
-fun UserId.Companion.random() = UserId(Random.nextLong(1, Long.MAX_VALUE))
-
-fun CountrySpecificId.Companion.random() = CountrySpecificId(ULID.random())
 
 fun User.Companion.create(
     id: UserId = UserId.random(),
     countrySpecificId: CountrySpecificId = CountrySpecificId.random(),
-    fullName: String = randomAlphabetic(10, 20),
-    email: String = randomAlphabetic(10, 20) + "@email.com",
+    fullName: String = String.randomFullName(),
+    email: String = String.randomEmail(),
     password: String = ULID.random(),
     type: UserType = UserType.entries.random(),
     balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
@@ -52,3 +38,5 @@ fun User.Companion.createFrom(request: CreateUserRequest): User {
         )
     }
 }
+
+fun User.Companion.createList(size: Int = Random.nextInt(10, 20)) = List(size) { create() }

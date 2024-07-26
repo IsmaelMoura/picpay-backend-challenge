@@ -3,6 +3,7 @@ package com.moura.picpay.backend.challenge.domain.user
 import com.moura.picpay.backend.challenge.IntegrationTest
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.domain.user.api.create
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
 import io.azam.ulidj.ULID
 import io.kotest.assertions.throwables.shouldThrow
