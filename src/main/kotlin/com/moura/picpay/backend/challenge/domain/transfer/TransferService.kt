@@ -28,8 +28,8 @@ class TransferService(
     private val notificationScope: CoroutineScope,
 ) {
     @Transactional
-    suspend fun transfer(request: TransferRequest) {
-        coroutineScope {
+    suspend fun transfer(request: TransferRequest): TransferId {
+        return coroutineScope {
             val payer = async { userService.getById(request.payer) }
             val payee = async { userService.getById(request.payee) }
 
@@ -51,6 +51,8 @@ class TransferService(
             notificationScope.launch {
                 notificationSender.sendNotification(transfer)
             }
+
+            transfer.id
         }
     }
 
