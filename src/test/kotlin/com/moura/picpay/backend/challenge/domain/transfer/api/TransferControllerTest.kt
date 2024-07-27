@@ -7,21 +7,19 @@ import com.moura.picpay.backend.challenge.domain.transfer.TransferService
 import com.moura.picpay.backend.challenge.domain.transfer.api.validation.TransferValidator
 import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.random
+import com.moura.picpay.backend.challenge.utils.returnSingleBody
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
-import io.kotest.matchers.collections.shouldHaveSingleElement
+import io.kotest.matchers.equals.shouldBeEqual
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.junit5.MockKExtension
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.returnResult
 import org.springframework.web.reactive.function.BodyInserters
 
 @WebFluxTest(TransferController::class)
@@ -49,9 +47,7 @@ class TransferControllerTest {
                 .body(BodyInserters.fromValue(request))
                 .exchange()
                 .expectStatus().isAccepted
-                .returnResult<TransferResponse>().responseBody
-                .asFlow().toList()
-                .shouldHaveSingleElement(TransferResponse(transferId))
+                .returnSingleBody<TransferResponse>() shouldBeEqual TransferResponse(transferId)
 
             coVerify { transferValidator.validate(request) }
             coVerify { transferService.transfer(request) }

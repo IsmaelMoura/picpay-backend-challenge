@@ -9,16 +9,17 @@ import com.moura.picpay.backend.challenge.domain.user.create
 import com.moura.picpay.backend.challenge.domain.user.createFrom
 import com.moura.picpay.backend.challenge.domain.user.createList
 import com.moura.picpay.backend.challenge.domain.user.random
+import com.moura.picpay.backend.challenge.utils.returnListBody
+import com.moura.picpay.backend.challenge.utils.returnSingleBody
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.collections.shouldHaveSingleElement
+import io.kotest.matchers.equals.shouldBeEqual
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.returnResult
 import org.springframework.web.reactive.function.BodyInserters
 
 @WebFluxTest(UserController::class)
@@ -67,9 +67,7 @@ class UserControllerTest {
                 .uri(V1_USERS_PATH + "/${userId.value}")
                 .exchange()
                 .expectStatus().isOk
-                .returnResult<GetUserResponse>().responseBody
-                .asFlow().toList()
-                .shouldHaveSingleElement(GetUserResponse.createFrom(user))
+                .returnSingleBody<GetUserResponse>() shouldBeEqual GetUserResponse.createFrom(user)
         }
 
     @Test
@@ -83,8 +81,7 @@ class UserControllerTest {
                 .uri(V1_USERS_PATH)
                 .exchange()
                 .expectStatus().isOk
-                .returnResult<GetUserResponse>().responseBody
-                .asFlow().toList()
+                .returnListBody<GetUserResponse>()
                 .shouldContainExactlyInAnyOrder(users.map(GetUserResponse::createFrom))
         }
 
@@ -109,8 +106,7 @@ class UserControllerTest {
                 .uri(V1_USERS_PATH)
                 .exchange()
                 .expectStatus().isOk
-                .returnResult<GetUserResponse>().responseBody
-                .asFlow().toList()
+                .returnListBody<GetUserResponse>()
                 .shouldBeEmpty()
         }
 }
