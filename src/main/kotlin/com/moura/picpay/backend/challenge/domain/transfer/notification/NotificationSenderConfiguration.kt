@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.slf4j.MDCContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
@@ -25,7 +26,8 @@ class NotificationSenderConfiguration {
                 CoroutineExceptionHandler { _, throwable ->
                     val logger = KotlinLogging.logger(javaClass.packageName + ".CoroutineExceptionHandler")
                     logger.error(throwable) { "Uncaught exception in notifications scope (message: ${throwable.message})" }
-                },
+                } +
+                MDCContext(),
         )
     }
 }

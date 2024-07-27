@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
 class TransferValidatorTest {
-    private val underTest = TransferValidator
+    private val underTest = TransferValidator()
 
     @Test
     fun `should return request when it is valid`() {

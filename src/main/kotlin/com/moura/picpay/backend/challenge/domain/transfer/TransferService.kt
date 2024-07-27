@@ -12,10 +12,12 @@ import com.moura.picpay.backend.challenge.domain.user.UserType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.reactive.TransactionalOperator
+import org.springframework.transaction.reactive.executeAndAwait
 
 private val logger = KotlinLogging.logger {}
 
@@ -24,35 +26,37 @@ class TransferService(
     private val transferRepository: TransferRepository,
     private val userService: UserService,
     private val authorizationService: TransferAuthorizationService,
+    private val transactional: TransactionalOperator,
     private val notificationSender: NotificationSender,
     private val notificationScope: CoroutineScope,
 ) {
-    @Transactional
     suspend fun transfer(request: TransferRequest): TransferId {
-        return coroutineScope {
-            val payer = async { userService.getById(request.payer) }
-            val payee = async { userService.getById(request.payee) }
+        return transactional.executeAndAwait {
+            withContext(MDCContext()) {
+                val payer = async { userService.getById(request.payer) }
+                val payee = async { userService.getById(request.payee) }
 
-            payer.await().checkIsAllowedToTransfer(request)
+                payer.await().checkIsAllowedToTransfer(request)
 
-            if (!authorizationService.isAuthorized()) {
-                throw PicPayException.TransferAuthorization("Transfer was not authorized")
+                if (!authorizationService.isAuthorized()) {
+                    throw PicPayException.TransferAuthorization("Transfer was not authorized")
+                }
+
+                val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
+                val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
+                val transfer =
+                    createTransfer(
+                        request = request,
+                        payee = updatedPayee.await(),
+                        payer = updatedPayer.await(),
+                    )
+
+                notificationScope.launch {
+                    notificationSender.sendNotification(transfer)
+                }
+
+                transfer.id
             }
-
-            val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
-            val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
-            val transfer =
-                createTransfer(
-                    request = request,
-                    payee = updatedPayee.await(),
-                    payer = updatedPayer.await(),
-                )
-
-            notificationScope.launch {
-                notificationSender.sendNotification(transfer)
-            }
-
-            transfer.id
         }
     }
 

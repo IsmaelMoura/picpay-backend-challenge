@@ -29,8 +29,8 @@ class TransferValidator {
         return violations.toSet()
     }
 
-    private companion object {
+    companion object {
         private const val VALUE_FIELD_NAME = "value"
-        private val MIN_AMOUNT_VALUE = BigDecimal.valueOf(0.1)
+        val MIN_AMOUNT_VALUE = BigDecimal.valueOf(0.1)
     }
 }
