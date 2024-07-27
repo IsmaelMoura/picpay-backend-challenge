@@ -25,7 +25,7 @@ sealed class PicPayException(
         }
     }
 
-    class TransferAuthorization(message: String) : PicPayException(message, HttpStatus.UNAUTHORIZED)
+    class TransferAuthorization(message: String) : PicPayException(message, HttpStatus.FORBIDDEN)
 
     class UserNotAllowedToTransfer(
         message: String,

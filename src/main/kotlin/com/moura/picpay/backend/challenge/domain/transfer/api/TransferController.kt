@@ -27,6 +27,7 @@ class TransferController(
 
         return transferValidator.validate(transfer)
             .let { transferService.transfer(transfer) }
+            .also { logger.info { "Transfer [$it] created successfully" } }
             .let { id ->
                 ResponseEntity
                     .status(HttpStatus.ACCEPTED)
