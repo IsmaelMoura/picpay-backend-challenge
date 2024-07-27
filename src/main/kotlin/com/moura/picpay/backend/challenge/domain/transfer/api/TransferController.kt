@@ -15,6 +15,7 @@ private val logger = KotlinLogging.logger {}
 @RestController
 @RequestMapping(V1_TRANSFER_PATH)
 class TransferController(
+    private val transferValidator: TransferValidator,
     private val transferService: TransferService,
 ) {
     @PostMapping
@@ -23,7 +24,7 @@ class TransferController(
     ) {
         logger.info { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
 
-        TransferValidator.validate(transfer)
+        transferValidator.validate(transfer)
             .let { transferService.transfer(transfer) }
             .let { ResponseEntity.accepted() }
     }
