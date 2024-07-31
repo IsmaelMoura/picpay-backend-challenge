@@ -2,6 +2,7 @@ package com.moura.picpay.backend.challenge.domain.user.api
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.mappings.V1_USERS_PATH
+import com.moura.picpay.backend.challenge.domain.user.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.User
 import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.UserService
@@ -20,7 +21,6 @@ import io.mockk.coVerify
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.util.UriBuilder
+import java.net.URI
 
 @WebFluxTest(UserController::class)
 @ExtendWith(MockKExtension::class)
@@ -71,21 +73,6 @@ class UserControllerTest {
         }
 
     @Test
-    fun `should get all user successfully`() =
-        runTest {
-            val users = User.createList()
-
-            coEvery { userService.getAllUsers() } returns users.asFlow()
-
-            webClient.get()
-                .uri(V1_USERS_PATH)
-                .exchange()
-                .expectStatus().isOk
-                .returnListBody<GetUserResponse>()
-                .shouldContainExactlyInAnyOrder(users.map(GetUserResponse::createFrom))
-        }
-
-    @Test
     fun `given user id not exist when get by id should return NOT_FOUND error`() {
         val userId = UserId.random()
 
@@ -98,15 +85,44 @@ class UserControllerTest {
     }
 
     @Test
-    fun `should return empty list when there is no user existent`() =
+    fun `should get all user successfully`() =
         runTest {
-            coEvery { userService.getAllUsers() } returns emptyFlow()
+            val users = User.createList()
+            val request = FetchUsersQueryParametersRequest.createFrom(users)
+
+            coEvery { userService.getAllUsers(request) } returns users.asFlow()
 
             webClient.get()
-                .uri(V1_USERS_PATH)
+                .uri { builder -> builder.buildFetchUsers(request) }
+                .exchange()
+                .expectStatus().isOk
+                .returnListBody<GetUserResponse>()
+                .shouldContainExactlyInAnyOrder(users.map(GetUserResponse::createFrom))
+        }
+
+    @Test
+    fun `should return empty list when there is no user existent`() =
+        runTest {
+            val request = FetchUsersQueryParametersRequest.create()
+            coEvery { userService.getAllUsers(request) } returns emptyFlow()
+
+            webClient.get()
+                .uri { builder -> builder.buildFetchUsers(request) }
                 .exchange()
                 .expectStatus().isOk
                 .returnListBody<GetUserResponse>()
                 .shouldBeEmpty()
         }
+
+    private fun UriBuilder.buildFetchUsers(request: FetchUsersQueryParametersRequest): URI {
+        return path(V1_USERS_PATH)
+            .queryParam(
+                FetchUsersQueryParametersRequest::countrySpecificIds.name,
+                request.countrySpecificIds?.map(CountrySpecificId::value),
+            )
+            .queryParam(FetchUsersQueryParametersRequest::fullNames.name, request.fullNames)
+            .queryParam(FetchUsersQueryParametersRequest::emails.name, request.emails)
+            .queryParam(FetchUsersQueryParametersRequest::type.name, request.type)
+            .build()
+    }
 }

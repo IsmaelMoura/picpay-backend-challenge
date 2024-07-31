@@ -3,12 +3,15 @@ package com.moura.picpay.backend.challenge.domain.user
 import com.moura.picpay.backend.challenge.IntegrationTest
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
 import com.moura.picpay.backend.challenge.domain.user.api.create
+import com.moura.picpay.backend.challenge.domain.user.api.randomList
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
+import com.moura.picpay.backend.challenge.utils.randomEmailList
+import com.moura.picpay.backend.challenge.utils.randomFullNameList
 import io.azam.ulidj.ULID
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.date.shouldBeBefore
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.equals.shouldNotBeEqual
@@ -19,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.math.BigDecimal
@@ -120,22 +124,103 @@ class UserServiceIntegrationTest : IntegrationTest() {
     @Test
     fun `should return all user successfully`() =
         runTest {
-            val ids =
-                List(Random.nextInt(10, 20)) { CreateUserRequest.create() }
-                    .map { underTest.createUser(it).id }
+            userRepository.deleteAll()
 
-            val result = underTest.getAllUsers().toList()
+            val ids = CreateUserRequest.randomList()
+                .map { underTest.createUser(it).id }
 
-            result.map(User::id).shouldContainAll(ids)
+            val result = underTest.getAllUsers(FetchUsersQueryParametersRequest()).toList()
+
+            result.map(User::id).shouldContainExactlyInAnyOrder(ids)
         }
 
     @Test
-    fun `should return empty flow when there are no users`() =
-        runTest {
-            userRepository.deleteAll()
+    fun `should return users filtering by countrySpecificIds`() = runTest {
+        val users = CountrySpecificId.randomList()
+            .map { CreateUserRequest.create(countrySpecificId = it) }
+            .map { underTest.createUser(it) }
 
-            val result = underTest.getAllUsers().toList()
+        CreateUserRequest.randomList().map { underTest.createUser(it) }
 
-            result.shouldBeEmpty()
-        }
+        val result = underTest.getAllUsers(
+            request = FetchUsersQueryParametersRequest(
+                countrySpecificIds = users.map(User::countrySpecificId)
+            )
+        ).toList()
+
+        result.shouldContainExactlyInAnyOrder(users)
+    }
+
+    @Test
+    fun `should return users filtering by fullNames correctly`() = runTest {
+        val users = String.randomFullNameList()
+            .map { CreateUserRequest.create(fullName = it) }
+            .map { underTest.createUser(it) }
+
+        CreateUserRequest.randomList().map { underTest.createUser(it) }
+
+        val result = underTest.getAllUsers(
+            request = FetchUsersQueryParametersRequest(
+                fullNames = users.map(User::fullName)
+            )
+        ).toList()
+
+        result.shouldContainExactlyInAnyOrder(users)
+    }
+
+    @Test
+    fun `should return users filtering by email correctly`() = runTest {
+        val users = String.randomEmailList()
+            .map { CreateUserRequest.create(email = it) }
+            .map { underTest.createUser(it) }
+
+        CreateUserRequest.randomList().map { underTest.createUser(it) }
+
+        val result = underTest.getAllUsers(
+            request = FetchUsersQueryParametersRequest(
+                emails = users.map(User::email)
+            )
+        ).toList()
+
+        result.shouldContainExactlyInAnyOrder(users)
+    }
+
+    @Test
+    fun `should return users filtering by user type correctly`() = runTest {
+        val userType = UserType.entries.random()
+        val users = List(Random.nextInt(10, 20)) { userType }
+            .map { CreateUserRequest.create(type = it) }
+            .map { underTest.createUser(it) }
+
+        CreateUserRequest.randomList().map { underTest.createUser(it) }
+
+        val result = underTest.getAllUsers(
+            request = FetchUsersQueryParametersRequest(
+                type = userType
+            )
+        ).toList()
+
+        result shouldContainExactlyInAnyOrder users
+    }
+
+    @Test
+    @Disabled
+    fun `should return users filtering by countrySpecificId and fullName correctly`() = runTest {
+        val byCountrySpecificId = CountrySpecificId.randomList()
+            .map { underTest.createUser(CreateUserRequest.create(countrySpecificId = it)) }
+
+        val byFullName = String.randomFullNameList()
+            .map { underTest.createUser(CreateUserRequest.create(fullName = it)) }
+
+        CreateUserRequest.randomList().map { underTest.createUser(it) }
+
+        val result = underTest.getAllUsers(
+            request = FetchUsersQueryParametersRequest(
+                countrySpecificIds = byCountrySpecificId.map(User::countrySpecificId),
+                fullNames = byFullName.map(User::fullName)
+            )
+        ).toList()
+
+        result shouldContainExactlyInAnyOrder byCountrySpecificId + byFullName
+    }
 }

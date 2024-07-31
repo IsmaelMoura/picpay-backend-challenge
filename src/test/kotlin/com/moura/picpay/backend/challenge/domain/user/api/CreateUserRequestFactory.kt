@@ -19,3 +19,6 @@ fun CreateUserRequest.Companion.create(
 ): CreateUserRequest {
     return CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
 }
+
+fun CreateUserRequest.Companion.randomList(size: Int = Random.nextInt(10, 20)) =
+    List(size) { create() }
