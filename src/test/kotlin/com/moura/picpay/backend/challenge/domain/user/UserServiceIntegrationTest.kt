@@ -11,7 +11,6 @@ import com.moura.picpay.backend.challenge.utils.randomEmailList
 import com.moura.picpay.backend.challenge.utils.randomFullName
 import com.moura.picpay.backend.challenge.utils.randomFullNameList
 import io.azam.ulidj.ULID
-import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder

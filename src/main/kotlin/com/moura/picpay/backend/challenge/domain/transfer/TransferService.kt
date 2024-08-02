@@ -4,6 +4,7 @@ import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.transfer.api.TransferRequest
 import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationService
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
+import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSenderConfiguration
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferEntity
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRepository
 import com.moura.picpay.backend.challenge.domain.user.User
@@ -38,10 +39,6 @@ class TransferService(
 
                 payer.await().checkIsAllowedToTransfer(request)
 
-                if (!authorizationService.isAuthorized()) {
-                    throw PicPayException.TransferAuthorization("Transfer was not authorized")
-                }
-
                 val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
                 val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
                 val transfer =
@@ -71,19 +68,25 @@ class TransferService(
             .also { logger.info { "Successfully created transfer [${it.id}] (payee: ${it.payee.id}, payer: ${it.payer.id})" } }
     }
 
-    private final fun User.checkIsAllowedToTransfer(request: TransferRequest) {
+    private suspend fun User.checkIsAllowedToTransfer(request: TransferRequest) {
         when {
-            balance < request.value -> throw PicPayException.UserNotAllowedToTransfer(
-                message = "User balance is not enough to transfer",
-                userId = id,
-            )
+            balance < request.value -> {
+                throw PicPayException.UserNotAllowedToTransfer(
+                    message = "User balance is not enough to transfer",
+                    userId = id,
+                )
+            }
 
-            type == UserType.MERCHANT -> throw PicPayException.UserNotAllowedToTransfer(
-                message = "User type is ${UserType.MERCHANT} and isn't allowed to transfer",
-                userId = id,
-            )
+            type == UserType.MERCHANT -> {
+                throw PicPayException.UserNotAllowedToTransfer(
+                    message = "User type is ${UserType.MERCHANT} and isn't allowed to transfer",
+                    userId = id,
+                )
+            }
 
-            else -> {}
+            authorizationService.isAuthorized().not() -> {
+                throw PicPayException.TransferAuthorization("Transfer was not authorized")
+            }
         }
     }
 
