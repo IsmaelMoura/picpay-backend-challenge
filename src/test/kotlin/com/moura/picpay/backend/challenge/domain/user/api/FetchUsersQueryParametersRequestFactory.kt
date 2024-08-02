@@ -29,6 +29,6 @@ fun FetchUsersQueryParametersRequest.Companion.create(
         countrySpecificIds = countrySpecificIds,
         fullNames = fullNames,
         emails = emails,
-        type = type
+        type = type,
     )
 }

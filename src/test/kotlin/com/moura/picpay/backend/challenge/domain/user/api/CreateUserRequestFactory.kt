@@ -20,5 +20,4 @@ fun CreateUserRequest.Companion.create(
     return CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
 }
 
-fun CreateUserRequest.Companion.randomList(size: Int = Random.nextInt(10, 20)) =
-    List(size) { create() }
+fun CreateUserRequest.Companion.randomList(size: Int = Random.nextInt(10, 20)) = List(size) { create() }
