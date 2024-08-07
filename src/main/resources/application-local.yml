@@ -17,4 +17,4 @@ picpay-backend-challenge:
 
 logging:
   level:
-    com.moura: DEBUG
+    com.moura: debug

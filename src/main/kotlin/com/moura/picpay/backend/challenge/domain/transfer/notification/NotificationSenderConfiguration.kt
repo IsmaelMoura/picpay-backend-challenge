@@ -1,6 +1,7 @@
 package com.moura.picpay.backend.challenge.domain.transfer.notification
 
-import com.moura.picpay.backend.challenge.configuration.tracing.TracingLoggingInterceptor
+import com.moura.picpay.backend.challenge.configuration.tracing.RequestTracingLoggingInterceptor
+import com.moura.picpay.backend.challenge.configuration.tracing.ResponseTracingLoggingInterceptor
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
@@ -22,7 +23,8 @@ class NotificationSenderConfiguration {
             webClient =
                 webClientBuilder
                     .baseUrl(properties.baseUrl)
-                    .filter(TracingLoggingInterceptor)
+                    .filter(RequestTracingLoggingInterceptor)
+                    .filter(ResponseTracingLoggingInterceptor)
                     .build(),
         )
     }
