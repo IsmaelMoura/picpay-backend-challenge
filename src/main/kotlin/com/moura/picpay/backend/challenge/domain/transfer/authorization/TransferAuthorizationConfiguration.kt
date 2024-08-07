@@ -1,5 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.transfer.authorization
 
+import com.moura.picpay.backend.challenge.configuration.tracing.TracingLoggingInterceptor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
@@ -7,9 +8,16 @@ import org.springframework.web.reactive.function.client.WebClient
 @Configuration
 class TransferAuthorizationConfiguration {
     @Bean
-    fun transferAuthorizationService(properties: AuthorizationServiceProperties): TransferAuthorizationService {
+    fun transferAuthorizationService(
+        properties: AuthorizationServiceProperties,
+        webClientBuilder: WebClient.Builder,
+    ): TransferAuthorizationService {
         return MockTransferAuthorizationService(
-            webClient = WebClient.create(properties.baseUrl),
+            webClient =
+                webClientBuilder
+                    .baseUrl(properties.baseUrl)
+                    .filter(TracingLoggingInterceptor)
+                    .build(),
         )
     }
 }
