@@ -4,7 +4,6 @@ import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.transfer.api.TransferRequest
 import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationService
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
-import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSenderConfiguration
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferEntity
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRepository
 import com.moura.picpay.backend.challenge.domain.user.User
@@ -48,7 +47,7 @@ class TransferService(
                         payer = updatedPayer.await(),
                     )
 
-                notificationScope.launch {
+                notificationScope.launch(MDCContext()) {
                     notificationSender.sendNotification(transfer)
                 }
 

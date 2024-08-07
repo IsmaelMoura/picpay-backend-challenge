@@ -8,6 +8,7 @@ import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.springframework.stereotype.Service
 
 private val logger = KotlinLogging.logger {}
@@ -46,7 +47,12 @@ class UserService(
     }
 
     fun getAllUsers(request: FetchUsersQueryParametersRequest): Flow<User> {
-        return userRepository.fetchAllUsers(request).map { it.toDomainUser() }
+        return userRepository
+            .fetchAllUsers(request)
+            .onEach { user ->
+                logger.debug { "Found user [${user.id}] on database" }
+            }
+            .map { it.toDomainUser() }
     }
 
     private fun CreateUserRequest.toEntity(): UserEntity {

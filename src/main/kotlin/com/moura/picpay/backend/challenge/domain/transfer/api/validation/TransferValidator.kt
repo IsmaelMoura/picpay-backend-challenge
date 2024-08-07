@@ -10,27 +10,22 @@ import java.math.BigDecimal
 class TransferValidator {
     @Throws(PicPayException.TransferValidation::class)
     fun validate(request: TransferRequest): TransferRequest {
-        val violations = createViolations(request)
-
-        if (violations.isNotEmpty()) {
-            throw PicPayException.TransferValidation(violations)
-        }
-
-        return request
+        return createViolations(request)
+            .takeIf { it.isNotEmpty() }
+            ?.let { throw PicPayException.TransferValidation(it) }
+            ?: request
     }
 
     private fun createViolations(request: TransferRequest): Set<FieldViolation> {
-        val violations = mutableSetOf<FieldViolation>()
-
-        if (request.value < MIN_AMOUNT_VALUE) {
-            violations.add(FieldViolation(VALUE_FIELD_NAME, "Transfer value must be greater than 0"))
+        return buildSet {
+            if (request.value < MIN_AMOUNT_VALUE) {
+                add(FieldViolation(VALUE_FIELD_NAME, "Transfer value must be greater than 0"))
+            }
         }
-
-        return violations.toSet()
     }
 
     companion object {
-        private const val VALUE_FIELD_NAME = "value"
-        val MIN_AMOUNT_VALUE = BigDecimal.valueOf(0.1)
+        private val VALUE_FIELD_NAME: String = TransferRequest::value.name
+        val MIN_AMOUNT_VALUE: BigDecimal = BigDecimal.valueOf(0.1)
     }
 }

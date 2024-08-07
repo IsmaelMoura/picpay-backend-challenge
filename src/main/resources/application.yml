@@ -21,3 +21,12 @@ picpay-backend-challenge:
     notification:
       host: ${TRANSFER_NOTIFICATION_HOST}
       path: /api/v1/transfers/notification
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: [ "health", "loggers", "metrics" ]
