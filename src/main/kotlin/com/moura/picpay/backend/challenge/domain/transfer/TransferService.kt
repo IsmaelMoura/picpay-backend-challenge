@@ -3,6 +3,7 @@ package com.moura.picpay.backend.challenge.domain.transfer
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.transfer.api.TransferRequest
 import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationService
+import com.moura.picpay.backend.challenge.domain.transfer.metrics.TransferMetricsModule
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferEntity
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRepository
@@ -29,29 +30,32 @@ class TransferService(
     private val transactional: TransactionalOperator,
     private val notificationSender: NotificationSender,
     private val notificationScope: CoroutineScope,
+    private val metrics: TransferMetricsModule,
 ) {
     suspend fun transfer(request: TransferRequest): TransferId {
-        return transactional.executeAndAwait {
-            withContext(MDCContext()) {
-                val payer = async { userService.getById(request.payer) }
-                val payee = async { userService.getById(request.payee) }
+        return metrics.measureTransferOperation {
+            transactional.executeAndAwait {
+                withContext(MDCContext()) {
+                    val payer = async { userService.getById(request.payer) }
+                    val payee = async { userService.getById(request.payee) }
 
-                payer.await().checkIsAllowedToTransfer(request)
+                    payer.await().checkIsAllowedToTransfer(request)
 
-                val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
-                val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
-                val transfer =
-                    createTransfer(
-                        request = request,
-                        payee = updatedPayee.await(),
-                        payer = updatedPayer.await(),
-                    )
+                    val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
+                    val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
+                    val transfer =
+                        createTransfer(
+                            request = request,
+                            payee = updatedPayee.await(),
+                            payer = updatedPayer.await(),
+                        )
 
-                notificationScope.launch(MDCContext()) {
-                    notificationSender.sendNotification(transfer)
+                    notificationScope.launch(MDCContext()) {
+                        notificationSender.sendNotification(transfer)
+                    }
+
+                    transfer.id
                 }
-
-                transfer.id
             }
         }
     }

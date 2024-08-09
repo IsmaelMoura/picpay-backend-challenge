@@ -14,7 +14,3 @@ picpay-backend-challenge:
       host: http://localhost:9090
     notification:
       host: http://localhost:9090
-
-logging:
-  level:
-    com.moura: debug
