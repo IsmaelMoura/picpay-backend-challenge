@@ -20,10 +20,16 @@ class MockTransferAuthorizationService(
                     .awaitBody<AuthorizationResponse>()
                     .isAuthorized
             }
-        }.onSuccess { isAuthorized ->
-            logger.info { "Retrieved response from authorization service (isAuthorized: $isAuthorized)" }
-        }.onFailure {
-            logger.warn(it) { "Occurred error while to check transfer authorization" }
-        }.getOrElse { false }
+        }
+            .onSuccess { isAuthorized ->
+                logger.info { "Retrieved response from authorization service (isAuthorized: $isAuthorized)" }
+            }
+            .onFailure { throwable ->
+                logger.warn(throwable) { "Occurred error while to check transfer authorization" }
+            }
+            .getOrElse { false }
+            .also { isAuthorized ->
+                metricsModule.incrementAuthorizationDataCount(isAuthorized)
+            }
     }
 }
