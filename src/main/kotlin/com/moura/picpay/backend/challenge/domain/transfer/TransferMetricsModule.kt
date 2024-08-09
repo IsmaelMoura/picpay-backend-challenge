@@ -2,8 +2,8 @@ package com.moura.picpay.backend.challenge.domain.transfer
 
 import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.stereotype.Component
-import java.util.concurrent.TimeUnit
 import kotlin.time.measureTimedValue
+import kotlin.time.toJavaDuration
 
 @Component
 class TransferMetricsModule(
@@ -14,7 +14,7 @@ class TransferMetricsModule(
             .also {
                 registry
                     .timer(TRANSFER_OPERATION_TIMER)
-                    .record(it.duration.inWholeMilliseconds, TimeUnit.MILLISECONDS)
+                    .record(it.duration.toJavaDuration())
             }.value
     }
 

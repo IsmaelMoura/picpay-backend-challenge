@@ -18,6 +18,7 @@ class NotificationSenderConfiguration {
     fun notificationSender(
         properties: NotificationSenderProperties,
         webClientBuilder: WebClient.Builder,
+        notificationMetricsModule: NotificationMetricsModule,
     ): NotificationSender {
         return MockNotificationSender(
             webClient =
@@ -26,6 +27,7 @@ class NotificationSenderConfiguration {
                     .filter(RequestTracingLoggingInterceptor)
                     .filter(ResponseTracingLoggingInterceptor)
                     .build(),
+            metricsModule = notificationMetricsModule,
         )
     }
 
