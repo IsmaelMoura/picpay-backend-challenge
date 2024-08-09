@@ -6,15 +6,20 @@ import org.springframework.web.reactive.function.client.awaitBody
 
 private val logger = KotlinLogging.logger {}
 
-class MockTransferAuthorizationService(private val webClient: WebClient) : TransferAuthorizationService {
+class MockTransferAuthorizationService(
+    private val webClient: WebClient,
+    private val metricsModule: AuthorizationMetricsModule,
+) : TransferAuthorizationService {
     override suspend fun isAuthorized(): Boolean {
         return runCatching {
-            webClient
-                .also { logger.info { "Sending request to check transfer authorization" } }
-                .get()
-                .retrieve()
-                .awaitBody<AuthorizationResponse>()
-                .isAuthorized
+            metricsModule.measureGetAuthorizationData {
+                webClient
+                    .also { logger.info { "Sending request to check transfer authorization" } }
+                    .get()
+                    .retrieve()
+                    .awaitBody<AuthorizationResponse>()
+                    .isAuthorized
+            }
         }.onSuccess { isAuthorized ->
             logger.info { "Retrieved response from authorization service (isAuthorized: $isAuthorized)" }
         }.onFailure {

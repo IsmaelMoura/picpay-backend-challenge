@@ -12,6 +12,7 @@ class TransferAuthorizationConfiguration {
     fun transferAuthorizationService(
         properties: AuthorizationServiceProperties,
         webClientBuilder: WebClient.Builder,
+        metricsModule: AuthorizationMetricsModule,
     ): TransferAuthorizationService {
         return MockTransferAuthorizationService(
             webClient =
@@ -20,6 +21,7 @@ class TransferAuthorizationConfiguration {
                     .filter(RequestTracingLoggingInterceptor)
                     .filter(ResponseTracingLoggingInterceptor)
                     .build(),
+            metricsModule = metricsModule,
         )
     }
 }
