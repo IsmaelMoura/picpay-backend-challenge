@@ -1,4 +1,4 @@
-package com.moura.picpay.backend.challenge.domain.transfer
+package com.moura.picpay.backend.challenge.domain.transfer.model
 
 import io.azam.ulidj.ULID
 import io.kotest.matchers.shouldBe

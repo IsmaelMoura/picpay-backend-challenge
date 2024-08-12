@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.transfer.notification
 
-import com.moura.picpay.backend.challenge.domain.transfer.Transfer
+import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.web.reactive.function.client.WebClient

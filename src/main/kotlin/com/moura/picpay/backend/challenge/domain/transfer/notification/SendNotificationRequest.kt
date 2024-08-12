@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.transfer.notification
 
-import com.moura.picpay.backend.challenge.domain.transfer.Transfer
+import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 
 data class SendNotificationRequest(
     val transfer: Transfer,

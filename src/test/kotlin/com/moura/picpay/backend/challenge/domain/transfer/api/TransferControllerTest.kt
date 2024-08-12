@@ -2,9 +2,9 @@ package com.moura.picpay.backend.challenge.domain.transfer.api
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.mappings.V1_TRANSFER_PATH
-import com.moura.picpay.backend.challenge.domain.transfer.TransferId
 import com.moura.picpay.backend.challenge.domain.transfer.TransferService
 import com.moura.picpay.backend.challenge.domain.transfer.api.validation.TransferValidator
+import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.random
 import com.moura.picpay.backend.challenge.utils.returnSingleBody

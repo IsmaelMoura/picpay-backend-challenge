@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.configuration
 
-import com.moura.picpay.backend.challenge.domain.transfer.TransferId
+import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.domain.user.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.UserId
 import io.r2dbc.spi.ConnectionFactory
