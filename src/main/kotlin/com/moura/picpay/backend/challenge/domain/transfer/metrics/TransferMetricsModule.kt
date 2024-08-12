@@ -1,4 +1,4 @@
-package com.moura.picpay.backend.challenge.domain.transfer
+package com.moura.picpay.backend.challenge.domain.transfer.metrics
 
 import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.stereotype.Component

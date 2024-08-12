@@ -3,6 +3,7 @@ package com.moura.picpay.backend.challenge.domain.transfer
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.transfer.api.TransferRequest
 import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationService
+import com.moura.picpay.backend.challenge.domain.transfer.metrics.TransferMetricsModule
 import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
