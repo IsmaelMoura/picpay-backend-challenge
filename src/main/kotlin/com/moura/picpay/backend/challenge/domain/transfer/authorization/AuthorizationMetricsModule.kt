@@ -1,7 +1,8 @@
 package com.moura.picpay.backend.challenge.domain.transfer.authorization
 
-import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tag
+import io.micrometer.core.instrument.Timer
 import org.springframework.stereotype.Component
 import kotlin.time.measureTimedValue
 import kotlin.time.toJavaDuration
@@ -12,37 +13,21 @@ class AuthorizationMetricsModule(
 ) {
     suspend fun measureGetAuthorizationData(block: suspend () -> Boolean): Boolean {
         return measureTimedValue { block() }
-            .also {
-                registry
-                    .timer(AUTHORIZATION_TIMER)
-                    .record(it.duration.toJavaDuration())
-            }
-            .value
-    }
-
-    fun incrementAuthorizationDataCount(authorized: Boolean) {
-        createAuthorizationDataCounter(authorized).increment()
-    }
-
-    private fun createAuthorizationDataCounter(authorized: Boolean): Counter {
-        return when (authorized) {
-            true ->
-                Counter
-                    .builder(AUTHORIZED_COUNTER_NAME)
-                    .description("Number of authorized transfers")
+            .also { timedValue ->
+                Timer
+                    .builder(AUTHORIZATION_TIMER)
+                    .description("Duration of authorization requests")
+                    .tags(
+                        setOf(
+                            Tag.of("authorized", timedValue.value.toString()),
+                        ),
+                    )
                     .register(registry)
-
-            false ->
-                Counter
-                    .builder(UNAUTHORIZED_COUNTER_NAME)
-                    .description("Number of unauthorized transfers")
-                    .register(registry)
-        }
+                    .record(timedValue.duration.toJavaDuration())
+            }.value
     }
 
     companion object {
         private const val AUTHORIZATION_TIMER = "transfer.authorization.duration"
-        private const val AUTHORIZED_COUNTER_NAME = "transfer.authorization.authorized"
-        private const val UNAUTHORIZED_COUNTER_NAME = "transfer.authorization.unauthorized"
     }
 }

@@ -28,8 +28,5 @@ class MockTransferAuthorizationService(
                 logger.warn(throwable) { "Occurred error while to check transfer authorization" }
             }
             .getOrElse { false }
-            .also { isAuthorized ->
-                metricsModule.incrementAuthorizationDataCount(isAuthorized)
-            }
     }
 }

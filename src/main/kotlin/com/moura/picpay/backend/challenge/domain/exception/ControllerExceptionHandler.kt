@@ -11,8 +11,8 @@ private val logger = KotlinLogging.logger {}
 class ControllerExceptionHandler {
     @ExceptionHandler(PicPayException::class)
     fun handlePicPayException(exception: PicPayException): ProblemDetail {
-        return exception
-            .also { logger.warn(exception) { "Handling exception (message: ${it.message})" } }
-            .toProblemDetail()
+        logger.warn(exception) { "Handling ${exception::class.simpleName} exception (message: ${exception.message})" }
+
+        return exception.toProblemDetail()
     }
 }
