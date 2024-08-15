@@ -32,23 +32,32 @@ val apacheCommonsVersion: String by project
 val springMockkVersion: String by project
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    // Web
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Database
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
+    runtimeOnly("org.postgresql:r2dbc-postgresql")
+    runtimeOnly("org.postgresql:postgresql")
+
+    // Observability / Metrics
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.github.oshai:kotlin-logging:$kotlinLoggingJvmVersion")
+
+    // Kotlin
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
-    implementation("io.github.oshai:kotlin-logging:$kotlinLoggingJvmVersion")
+
+    // ULID
     implementation("io.azam.ulidj:ulidj:$ulidjVersion")
-    runtimeOnly("org.postgresql:r2dbc-postgresql")
-    runtimeOnly("org.postgresql:postgresql")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("io.projectreactor:reactor-test")
