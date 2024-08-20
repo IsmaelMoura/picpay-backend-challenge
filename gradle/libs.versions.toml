@@ -8,6 +8,9 @@ ulidj = "1.0.4"
 kotest = "5.9.1"
 apache-commons = "3.15.0"
 spring-mockk = "4.0.0"
+protobuf = "0.9.4"
+protobuf-protoc = "4.27.3"
+protobuf-kotlin = "4.27.3"
 
 [libraries]
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
@@ -47,9 +50,12 @@ apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "a
 
 junit-plataform = { module = "org.junit.platform:junit-platform-launcher" }
 
+google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin"}
+
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+google-protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }

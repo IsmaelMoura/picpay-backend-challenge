@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.moura.picpay.backend.challenge.notification";
+
+message SendTransferNotificationRequest {
+  Transfer transfer = 1;
+  repeated NotificationChannel channels = 2;
+}
+
+message Transfer {
+  string transfer_id = 1;
+  uint64 payee_user_id = 2;
+  uint64 payer_user_id = 3;
+  TransferAmount amount = 4;
+}
+
+message TransferAmount {
+  uint32 scale = 1;
+  double value = 2;
+}
+
+enum NotificationChannel {
+  NOTIFICATION_CHANNEL_UNSPECIFIED = 0;
+  NOTIFICATION_CHANNEL_EMAIL = 1;
+  NOTIFICATION_CHANNEL_SMS = 2;
+}
