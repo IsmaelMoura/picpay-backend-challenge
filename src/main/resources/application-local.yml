@@ -19,5 +19,3 @@ picpay-backend-challenge:
   transfer:
     authorization:
       host: http://localhost:9090
-    notification:
-      host: http://localhost:9090

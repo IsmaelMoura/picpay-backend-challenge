@@ -65,7 +65,6 @@ class IntegrationTest {
                 add("spring.flyway.password", Postgres::PASSWORD)
 
                 add("picpay-backend-challenge.transfer.authorization.host", Mockoon::host)
-                add("picpay-backend-challenge.transfer.notification.host", Mockoon::host)
 
                 add("spring.kafka.bootstrap-servers", Kafka::bootstrapServers)
             }

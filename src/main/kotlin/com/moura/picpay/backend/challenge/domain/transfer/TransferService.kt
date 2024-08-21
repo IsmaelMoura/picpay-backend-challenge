@@ -13,9 +13,7 @@ import com.moura.picpay.backend.challenge.domain.user.User
 import com.moura.picpay.backend.challenge.domain.user.UserService
 import com.moura.picpay.backend.challenge.domain.user.UserType
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
@@ -31,7 +29,6 @@ class TransferService(
     private val authorizationService: TransferAuthorizationService,
     private val transactional: TransactionalOperator,
     private val notificationSender: NotificationSender,
-    private val notificationScope: CoroutineScope,
     private val metrics: TransferMetricsModule,
 ) {
     suspend fun transfer(request: TransferRequest): TransferId {
@@ -52,9 +49,7 @@ class TransferService(
                             payer = updatedPayer.await(),
                         )
 
-                    notificationScope.launch(MDCContext()) {
-                        notificationSender.sendNotification(transfer)
-                    }
+                    notificationSender.sendNotification(transfer)
 
                     transfer.id
                 }

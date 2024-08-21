@@ -36,35 +36,6 @@
         }
       ],
       "responseMode": null
-    },
-    {
-      "uuid": "054d5947-9092-4421-91f0-2c648d543b46",
-      "type": "http",
-      "documentation": "Notification service",
-      "method": "post",
-      "endpoint": "api/v1/transfers/notification",
-      "responses": [
-        {
-          "uuid": "ac5d78ba-7b7c-4641-b9cc-f142b2506432",
-          "body": "",
-          "latency": 1000,
-          "statusCode": 202,
-          "label": "Successfully sent notification",
-          "headers": [],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false,
-          "default": true,
-          "crudKey": "id",
-          "callbacks": []
-        }
-      ],
-      "responseMode": null
     }
   ],
   "rootChildren": [
