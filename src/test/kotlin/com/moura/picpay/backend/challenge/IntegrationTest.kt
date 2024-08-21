@@ -14,11 +14,13 @@ import java.io.File
 @Tag("integrationTest")
 @ActiveProfiles("test")
 class IntegrationTest {
-    private object Container : ComposeContainer(File("docker-compose.yaml")) {
+    companion object : ComposeContainer(File("docker-compose.yaml")) {
         private const val POSTGRES_SERVICE_NAME = "postgres"
         private const val POSTGRES_PORT = 5432
         private const val MOCKOON_SERVICE_NAME = "mockoon"
         private const val MOCKOON_PORT = 9090
+        private const val KAFKA_SERVICE_NAME = "kafka"
+        private const val KAFKA_PORT = 9092
 
         object Postgres {
             const val USERNAME = "root"
@@ -37,27 +39,36 @@ class IntegrationTest {
             val host = "http://$serviceHost:$servicePort"
         }
 
+        object Kafka {
+            private val host = getServiceHost(KAFKA_SERVICE_NAME, KAFKA_PORT)
+            private val port = getServicePort(KAFKA_SERVICE_NAME, KAFKA_PORT)
+            val bootstrapServers = "$host:$port"
+        }
+
         init {
             withExposedService(POSTGRES_SERVICE_NAME, POSTGRES_PORT)
                 .withExposedService(MOCKOON_SERVICE_NAME, MOCKOON_PORT)
+                .withExposedService(KAFKA_SERVICE_NAME, KAFKA_PORT)
                 .start()
         }
-    }
 
-    companion object {
         @Suppress("unused")
         @JvmStatic
         @DynamicPropertySource
         fun registerProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.r2dbc.url", Container.Postgres::r2dbcUrl)
-            registry.add("spring.r2dbc.username", Container.Postgres::USERNAME)
-            registry.add("spring.r2dbc.password", Container.Postgres::PASSWORD)
-            registry.add("spring.flyway.url", Container.Postgres::flywayUrl)
-            registry.add("spring.flyway.user", Container.Postgres::USERNAME)
-            registry.add("spring.flyway.password", Container.Postgres::PASSWORD)
+            registry.apply {
+                add("spring.r2dbc.url", Postgres::r2dbcUrl)
+                add("spring.r2dbc.username", Postgres::USERNAME)
+                add("spring.r2dbc.password", Postgres::PASSWORD)
+                add("spring.flyway.url", Postgres::flywayUrl)
+                add("spring.flyway.user", Postgres::USERNAME)
+                add("spring.flyway.password", Postgres::PASSWORD)
 
-            registry.add("picpay-backend-challenge.transfer.authorization.host", Container.Mockoon::host)
-            registry.add("picpay-backend-challenge.transfer.notification.host", Container.Mockoon::host)
+                add("picpay-backend-challenge.transfer.authorization.host", Mockoon::host)
+                add("picpay-backend-challenge.transfer.notification.host", Mockoon::host)
+
+                add("spring.kafka.bootstrap-servers", Kafka::bootstrapServers)
+            }
         }
     }
 }

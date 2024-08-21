@@ -9,9 +9,16 @@ spring:
     user: ${FLYWAY_USER}
     password: ${FLYWAY_PASSWORD}
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/picpay_simplified
-  threads:
-    virtual:
-      enabled: true
+  kafka:
+    client-id: ${spring.application.name}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      retries: 3
+    security:
+      protocol: SSL
+    ssl:
+      key-store-location: file:${KAFKA_KEYSTORE_LOCATION}
+      key-password: ${KAFKA_KEYSTORE_PASSWORD}
 
 picpay-backend-challenge:
   transfer:
@@ -19,6 +26,8 @@ picpay-backend-challenge:
       host: ${TRANSFER_AUTHORIZATION_HOST}
       path: /api/v1/transfers/authorization
     notification:
+      kafka:
+        topic: picpay.traffic.transfer.notification
       host: ${TRANSFER_NOTIFICATION_HOST}
       path: /api/v1/transfers/notification
 

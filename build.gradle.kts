@@ -26,6 +26,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":picpay-protobuf"))
+
     // Web
     implementation(libs.spring.webflux)
     implementation(libs.jackson.kotlin)
@@ -50,6 +52,10 @@ dependencies {
 
     // ULID
     implementation(libs.ulidj)
+
+    // Kafka
+    implementation(libs.spring.kafka)
+    implementation(libs.reactor.kafka)
 
     testImplementation(libs.spring.test)
     testImplementation(libs.spring.testcontainers)

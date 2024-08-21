@@ -24,6 +24,7 @@ kotest-junit = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "k
 
 spring-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
+spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
@@ -35,6 +36,7 @@ micrometer-tracing-brave = { module = "io.micrometer:micrometer-tracing-bridge-b
 micrometer-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
 
 reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions" }
+reactor-kafka = { module = "io.projectreactor.kafka:reactor-kafka" }
 reactor-test = { module = "io.projectreactor:reactor-test" }
 
 flyway-postgres = { module = "org.flywaydb:flyway-database-postgresql" }
@@ -50,7 +52,7 @@ apache-commons = { module = "org.apache.commons:commons-lang3", version.ref = "a
 
 junit-plataform = { module = "org.junit.platform:junit-platform-launcher" }
 
-google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin"}
+google-protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring" }
