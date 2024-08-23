@@ -1,6 +1,7 @@
 package com.moura.picpay.backend.challenge.domain.transfer.notification
 
 import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
+import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.notification.NotificationChannel
 import com.moura.picpay.backend.challenge.notification.SendTransferNotificationRequest
 import com.moura.picpay.backend.challenge.notification.sendTransferNotificationRequest
@@ -17,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class KafkaNotificationSender(
-    private val kafkaTemplate: ReactiveKafkaProducerTemplate<String, ByteArray>,
+    private val kafkaTemplate: ReactiveKafkaProducerTemplate<TransferId, ByteArray>,
     private val properties: KafkaNotificationProperties,
     private val metrics: NotificationMetricsModule,
 ) : NotificationSender {
@@ -38,10 +39,10 @@ class KafkaNotificationSender(
         }
     }
 
-    private fun createProducerRecord(transfer: Transfer): ProducerRecord<String, ByteArray> {
+    private fun createProducerRecord(transfer: Transfer): ProducerRecord<TransferId, ByteArray> {
         return ProducerRecord(
             properties.topic,
-            transfer.id.value,
+            transfer.id,
             createSendTransferNotificationRequest(transfer).toByteArray(),
         )
     }

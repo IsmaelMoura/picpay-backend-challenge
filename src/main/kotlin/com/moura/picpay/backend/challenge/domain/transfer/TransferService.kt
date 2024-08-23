@@ -14,8 +14,7 @@ import com.moura.picpay.backend.challenge.domain.user.UserService
 import com.moura.picpay.backend.challenge.domain.user.UserType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Service
 import org.springframework.transaction.reactive.TransactionalOperator
 import org.springframework.transaction.reactive.executeAndAwait
@@ -34,7 +33,7 @@ class TransferService(
     suspend fun transfer(request: TransferRequest): TransferId {
         return metrics.measureTransferOperation {
             transactional.executeAndAwait {
-                withContext(MDCContext()) {
+                coroutineScope {
                     val payer = async { userService.getById(request.payer) }
                     val payee = async { userService.getById(request.payee) }
 
