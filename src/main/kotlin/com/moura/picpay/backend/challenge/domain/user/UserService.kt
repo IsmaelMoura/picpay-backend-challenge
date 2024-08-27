@@ -3,6 +3,8 @@ package com.moura.picpay.backend.challenge.domain.user
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserEntity
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -43,7 +45,7 @@ class UserService(
             )
             .let { userRepository.save(it) }
             .toDomainUser()
-            .also { logger.info { "User [${user.id}] successfully updated" } }
+            .also { logger.info { "$user successfully updated" } }
     }
 
     fun getAllUsers(request: FetchUsersQueryParametersRequest): Flow<User> {

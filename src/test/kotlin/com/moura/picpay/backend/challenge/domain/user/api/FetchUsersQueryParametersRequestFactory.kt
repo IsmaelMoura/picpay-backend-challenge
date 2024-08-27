@@ -1,9 +1,10 @@
 package com.moura.picpay.backend.challenge.domain.user.api
 
-import com.moura.picpay.backend.challenge.domain.user.CountrySpecificId
-import com.moura.picpay.backend.challenge.domain.user.User
-import com.moura.picpay.backend.challenge.domain.user.UserType
-import com.moura.picpay.backend.challenge.domain.user.randomList
+import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
+import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserType
+import com.moura.picpay.backend.challenge.domain.user.model.randomList
 import com.moura.picpay.backend.challenge.utils.randomEmailList
 import com.moura.picpay.backend.challenge.utils.randomFullNameList
 
@@ -21,8 +22,8 @@ fun FetchUsersQueryParametersRequest.Companion.createFrom(
 
 fun FetchUsersQueryParametersRequest.Companion.create(
     countrySpecificIds: List<CountrySpecificId>? = CountrySpecificId.randomList(),
-    fullNames: List<String>? = String.randomFullNameList(),
-    emails: List<String>? = String.randomEmailList(),
+    fullNames: List<SensitiveData<String>>? = String.randomFullNameList(),
+    emails: List<SensitiveData<String>>? = String.randomEmailList(),
     type: UserType? = UserType.entries.random(),
 ): FetchUsersQueryParametersRequest {
     return FetchUsersQueryParametersRequest(

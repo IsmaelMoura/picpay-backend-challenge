@@ -1,4 +1,4 @@
-package com.moura.picpay.backend.challenge.domain.user
+package com.moura.picpay.backend.challenge.domain.user.model
 
 import kotlin.random.Random
 

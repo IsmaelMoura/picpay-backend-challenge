@@ -1,8 +1,8 @@
 package com.moura.picpay.backend.challenge.domain.transfer.api
 
 import com.moura.picpay.backend.challenge.domain.transfer.api.validation.TransferValidator
-import com.moura.picpay.backend.challenge.domain.user.UserId
-import com.moura.picpay.backend.challenge.domain.user.random
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.random
 import java.math.BigDecimal
 import kotlin.random.Random
 

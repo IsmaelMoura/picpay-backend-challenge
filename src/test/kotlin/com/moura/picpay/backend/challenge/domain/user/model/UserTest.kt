@@ -1,4 +1,4 @@
-package com.moura.picpay.backend.challenge.domain.user
+package com.moura.picpay.backend.challenge.domain.user.model
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ class UserTest {
 
         val increased = user.withIncreasedBalance(amountToIncrease)
 
-        increased.balance shouldBe user.balance + amountToIncrease
+        increased.balance shouldBe user.balance.value + amountToIncrease
     }
 
     @Test
@@ -25,6 +25,6 @@ class UserTest {
 
         val increased = user.withDecreasedBalance(amountToDecrease)
 
-        increased.balance shouldBe user.balance - amountToDecrease
+        increased.balance shouldBe user.balance.value - amountToDecrease
     }
 }

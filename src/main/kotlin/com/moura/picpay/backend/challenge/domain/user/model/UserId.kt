@@ -1,4 +1,4 @@
-package com.moura.picpay.backend.challenge.domain.user
+package com.moura.picpay.backend.challenge.domain.user.model
 
 import org.jetbrains.annotations.TestOnly
 import org.springframework.core.convert.converter.Converter

@@ -9,9 +9,9 @@ import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferEntity
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRepository
-import com.moura.picpay.backend.challenge.domain.user.User
 import com.moura.picpay.backend.challenge.domain.user.UserService
-import com.moura.picpay.backend.challenge.domain.user.UserType
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserType
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -69,7 +69,7 @@ class TransferService(
 
     private suspend fun User.checkIsAllowedToTransfer(request: TransferRequest) {
         when {
-            balance < request.value -> {
+            balance.value < request.value -> {
                 throw PicPayException.UserNotAllowedToTransfer(
                     message = "User balance is not enough to transfer",
                     userId = id,
@@ -78,7 +78,7 @@ class TransferService(
 
             type == UserType.MERCHANT -> {
                 throw PicPayException.UserNotAllowedToTransfer(
-                    message = "User type is ${UserType.MERCHANT} and isn't allowed to transfer",
+                    message = "User type is $type and isn't allowed to transfer",
                     userId = id,
                 )
             }

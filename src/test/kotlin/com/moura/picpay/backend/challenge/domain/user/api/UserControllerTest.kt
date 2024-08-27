@@ -2,14 +2,14 @@ package com.moura.picpay.backend.challenge.domain.user.api
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.mappings.V1_USERS_PATH
-import com.moura.picpay.backend.challenge.domain.user.CountrySpecificId
-import com.moura.picpay.backend.challenge.domain.user.User
-import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.UserService
-import com.moura.picpay.backend.challenge.domain.user.create
-import com.moura.picpay.backend.challenge.domain.user.createFrom
-import com.moura.picpay.backend.challenge.domain.user.createList
-import com.moura.picpay.backend.challenge.domain.user.random
+import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.create
+import com.moura.picpay.backend.challenge.domain.user.model.createFrom
+import com.moura.picpay.backend.challenge.domain.user.model.createList
+import com.moura.picpay.backend.challenge.domain.user.model.random
 import com.moura.picpay.backend.challenge.utils.returnListBody
 import com.moura.picpay.backend.challenge.utils.returnSingleBody
 import com.ninjasquad.springmockk.MockkBean

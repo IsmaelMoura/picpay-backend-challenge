@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.exception
 
-import com.moura.picpay.backend.challenge.domain.user.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 

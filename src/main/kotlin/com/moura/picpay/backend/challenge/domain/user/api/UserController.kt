@@ -1,9 +1,9 @@
 package com.moura.picpay.backend.challenge.domain.user.api
 
 import com.moura.picpay.backend.challenge.domain.mappings.V1_USERS_PATH
-import com.moura.picpay.backend.challenge.domain.user.User
-import com.moura.picpay.backend.challenge.domain.user.UserId
 import com.moura.picpay.backend.challenge.domain.user.UserService
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

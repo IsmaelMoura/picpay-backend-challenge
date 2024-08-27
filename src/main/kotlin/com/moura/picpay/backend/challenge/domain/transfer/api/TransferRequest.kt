@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.transfer.api
 
-import com.moura.picpay.backend.challenge.domain.user.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import org.jetbrains.annotations.TestOnly
 import java.io.Serializable
 import java.math.BigDecimal

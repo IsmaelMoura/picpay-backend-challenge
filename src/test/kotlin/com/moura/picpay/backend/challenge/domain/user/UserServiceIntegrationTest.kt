@@ -2,15 +2,23 @@ package com.moura.picpay.backend.challenge.domain.user
 
 import com.moura.picpay.backend.challenge.IntegrationTest
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
+import com.moura.picpay.backend.challenge.domain.masking.asSensitiveData
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
 import com.moura.picpay.backend.challenge.domain.user.api.create
 import com.moura.picpay.backend.challenge.domain.user.api.randomList
+import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
+import com.moura.picpay.backend.challenge.domain.user.model.User
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.UserType
+import com.moura.picpay.backend.challenge.domain.user.model.random
+import com.moura.picpay.backend.challenge.domain.user.model.randomList
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
+import com.moura.picpay.backend.challenge.utils.randomEmail
 import com.moura.picpay.backend.challenge.utils.randomEmailList
 import com.moura.picpay.backend.challenge.utils.randomFullName
 import com.moura.picpay.backend.challenge.utils.randomFullNameList
-import io.azam.ulidj.ULID
+import com.moura.picpay.backend.challenge.utils.randomPassword
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -24,7 +32,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.math.BigDecimal
@@ -81,11 +88,11 @@ class UserServiceIntegrationTest : IntegrationTest() {
             val update =
                 user.copy(
                     countrySpecificId = CountrySpecificId.random(),
-                    fullName = randomAlphabetic(20),
-                    email = randomAlphabetic(20),
-                    password = ULID.random(),
+                    fullName = String.randomFullName(),
+                    email = String.randomEmail(),
+                    password = String.randomPassword(),
                     type = UserType.entries.filterNot { it == user.type }.first(),
-                    balance = BigDecimal.valueOf(200),
+                    balance = BigDecimal.valueOf(200).asSensitiveData(),
                 )
 
             val result = underTest.updateUser(update)
@@ -111,7 +118,7 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should update modifiedAt when update user correctly`() =
         runTest {
             val user = underTest.createUser(CreateUserRequest.create())
-            val update = user.copy(balance = BigDecimal.valueOf(200))
+            val update = user.copy(balance = BigDecimal.valueOf(200).asSensitiveData())
 
             delay(1000)
             val result = underTest.updateUser(update)

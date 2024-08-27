@@ -1,7 +1,7 @@
 package com.moura.picpay.backend.challenge.domain.transfer.persistence
 
 import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
-import com.moura.picpay.backend.challenge.domain.user.UserId
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.relational.core.mapping.Table
 import java.io.Serializable
