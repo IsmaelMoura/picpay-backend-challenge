@@ -1,7 +1,5 @@
 package com.moura.picpay.backend.challenge.domain.user.api
 
-import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
-import com.moura.picpay.backend.challenge.domain.masking.asSensitiveData
 import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.model.UserType
 import org.jetbrains.annotations.TestOnly
@@ -10,11 +8,11 @@ import java.math.BigDecimal
 
 data class CreateUserRequest(
     val countrySpecificId: CountrySpecificId,
-    val fullName: SensitiveData<String>,
-    val email: SensitiveData<String>,
-    val password: SensitiveData<String>,
+    val fullName: String,
+    val email: String,
+    val password: String,
     val type: UserType,
-    val balance: SensitiveData<BigDecimal> = BigDecimal.ZERO.asSensitiveData(),
+    val balance: BigDecimal = BigDecimal.ZERO,
 ) : Serializable {
     @TestOnly
     companion object

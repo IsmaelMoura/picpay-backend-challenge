@@ -1,25 +1,23 @@
 package com.moura.picpay.backend.challenge.domain.user.model
 
-import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
-import com.moura.picpay.backend.challenge.domain.masking.asSensitiveData
 import org.jetbrains.annotations.TestOnly
 import java.math.BigDecimal
 
 data class User(
     val id: UserId,
     val countrySpecificId: CountrySpecificId,
-    val fullName: SensitiveData<String>,
-    val email: SensitiveData<String>,
-    val password: SensitiveData<String>,
+    val fullName: String,
+    val email: String,
+    val password: String,
     val type: UserType,
-    val balance: SensitiveData<BigDecimal>,
+    val balance: BigDecimal,
 ) {
     fun withIncreasedBalance(amount: BigDecimal): User {
-        return copy(balance = (balance.value + amount).asSensitiveData())
+        return copy(balance = balance + amount)
     }
 
     fun withDecreasedBalance(amount: BigDecimal): User {
-        return copy(balance = (balance.value - amount).asSensitiveData())
+        return copy(balance = balance - amount)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -34,7 +32,7 @@ data class User(
         if (email != other.email) return false
         if (password != other.password) return false
         if (type != other.type) return false
-        if (balance.value.compareTo(other.balance.value) != 0) return false
+        if (balance.compareTo(other.balance) != 0) return false
 
         return true
     }

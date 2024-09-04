@@ -1,23 +1,26 @@
 package com.moura.picpay.backend.challenge.domain.user.model
 
-import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
 import org.jetbrains.annotations.TestOnly
 import org.springframework.core.convert.converter.Converter
+import org.springframework.data.convert.ReadingConverter
+import org.springframework.data.convert.WritingConverter
 import org.springframework.stereotype.Component
 import java.io.Serializable
 
 @JvmInline
-value class CountrySpecificId(val value: SensitiveData<String>) : Serializable {
+value class CountrySpecificId(val value: String) : Serializable {
     @Component
-    object ToStringConverter : Converter<CountrySpecificId, SensitiveData<String>> {
-        override fun convert(source: CountrySpecificId): SensitiveData<String> {
+    @WritingConverter
+    object ToStringConverter : Converter<CountrySpecificId, String> {
+        override fun convert(source: CountrySpecificId): String {
             return source.value
         }
     }
 
     @Component
-    object FromStringConverter : Converter<SensitiveData<String>, CountrySpecificId> {
-        override fun convert(source: SensitiveData<String>): CountrySpecificId {
+    @ReadingConverter
+    object FromStringConverter : Converter<String, CountrySpecificId> {
+        override fun convert(source: String): CountrySpecificId {
             return CountrySpecificId(source)
         }
     }

@@ -1,6 +1,5 @@
 package com.moura.picpay.backend.challenge.domain.user.persistence
 
-import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
 import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import com.moura.picpay.backend.challenge.domain.user.model.UserType
@@ -17,11 +16,11 @@ data class UserEntity(
     @Id
     val id: UserId? = null,
     val countrySpecificId: CountrySpecificId,
-    val fullName: SensitiveData<String>,
-    val email: SensitiveData<String>,
-    val password: SensitiveData<String>,
+    val fullName: String,
+    val email: String,
+    val password: String,
     val type: UserType,
-    val balance: SensitiveData<BigDecimal>,
+    val balance: BigDecimal,
     @CreatedDate
     val createdAt: Instant? = null,
     @LastModifiedDate

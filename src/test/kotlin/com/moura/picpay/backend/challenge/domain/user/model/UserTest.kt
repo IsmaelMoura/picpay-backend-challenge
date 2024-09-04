@@ -14,7 +14,7 @@ class UserTest {
 
         val increased = user.withIncreasedBalance(amountToIncrease)
 
-        increased.balance shouldBe user.balance.value + amountToIncrease
+        increased.balance shouldBe user.balance + amountToIncrease
     }
 
     @Test
@@ -25,6 +25,6 @@ class UserTest {
 
         val increased = user.withDecreasedBalance(amountToDecrease)
 
-        increased.balance shouldBe user.balance.value - amountToDecrease
+        increased.balance shouldBe user.balance - amountToDecrease
     }
 }

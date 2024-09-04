@@ -2,7 +2,6 @@ package com.moura.picpay.backend.challenge.domain.user
 
 import com.moura.picpay.backend.challenge.IntegrationTest
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
-import com.moura.picpay.backend.challenge.domain.masking.asSensitiveData
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
 import com.moura.picpay.backend.challenge.domain.user.api.create
@@ -92,7 +91,7 @@ class UserServiceIntegrationTest : IntegrationTest() {
                     email = String.randomEmail(),
                     password = String.randomPassword(),
                     type = UserType.entries.filterNot { it == user.type }.first(),
-                    balance = BigDecimal.valueOf(200).asSensitiveData(),
+                    balance = BigDecimal.valueOf(200),
                 )
 
             val result = underTest.updateUser(update)
@@ -118,7 +117,7 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should update modifiedAt when update user correctly`() =
         runTest {
             val user = underTest.createUser(CreateUserRequest.create())
-            val update = user.copy(balance = BigDecimal.valueOf(200).asSensitiveData())
+            val update = user.copy(balance = BigDecimal.valueOf(200))
 
             delay(1000)
             val result = underTest.updateUser(update)

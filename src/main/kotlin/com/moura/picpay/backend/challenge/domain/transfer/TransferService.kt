@@ -69,7 +69,7 @@ class TransferService(
 
     private suspend fun User.checkIsAllowedToTransfer(request: TransferRequest) {
         when {
-            balance.value < request.value -> {
+            balance < request.value -> {
                 throw PicPayException.UserNotAllowedToTransfer(
                     message = "User balance is not enough to transfer",
                     userId = id,

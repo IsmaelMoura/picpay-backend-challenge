@@ -26,10 +26,10 @@ class CustomizedUserRepositoryImpl(
                     add(Criteria.where(COUNTRY_SPECIFIC_ID_COLUMN_NAME).isIn(ids))
                 }
             request.fullNames
-                ?.filter { it.value.isNotBlank() }
+                ?.filter { it.isNotBlank() }
                 ?.map { name ->
                     Criteria.where(FULL_NAME_COLUMN_NAME)
-                        .like(name.value + LIKE_OPERATOR)
+                        .like(name + LIKE_OPERATOR)
                         .ignoreCase(true)
                 }
                 ?.combineWithOr()

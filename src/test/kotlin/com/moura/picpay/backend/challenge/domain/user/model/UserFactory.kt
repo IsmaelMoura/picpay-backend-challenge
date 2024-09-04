@@ -1,7 +1,5 @@
 package com.moura.picpay.backend.challenge.domain.user.model
 
-import com.moura.picpay.backend.challenge.domain.masking.SensitiveData
-import com.moura.picpay.backend.challenge.domain.masking.asSensitiveData
 import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.utils.randomEmail
 import com.moura.picpay.backend.challenge.utils.randomFullName
@@ -12,11 +10,11 @@ import kotlin.random.Random
 fun User.Companion.create(
     id: UserId = UserId.random(),
     countrySpecificId: CountrySpecificId = CountrySpecificId.random(),
-    fullName: SensitiveData<String> = String.randomFullName(),
-    email: SensitiveData<String> = String.randomEmail(),
-    password: SensitiveData<String> = String.randomPassword(),
+    fullName: String = String.randomFullName(),
+    email: String = String.randomEmail(),
+    password: String = String.randomPassword(),
     type: UserType = com.moura.picpay.backend.challenge.domain.user.model.UserType.entries.random(),
-    balance: SensitiveData<BigDecimal> = BigDecimal.valueOf(Random.nextDouble()).asSensitiveData(),
+    balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
 ): User {
     return User(
         id = id,
