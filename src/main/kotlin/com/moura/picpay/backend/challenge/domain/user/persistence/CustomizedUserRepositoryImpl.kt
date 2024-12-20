@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.user.persistence
 
-import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.FetchUsersQueryParametersRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate

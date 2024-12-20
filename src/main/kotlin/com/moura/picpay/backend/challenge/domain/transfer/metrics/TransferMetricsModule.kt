@@ -19,6 +19,6 @@ class TransferMetricsModule(
     }
 
     companion object {
-        private const val TRANSFER_OPERATION_TIMER = "transfer.operation.duration"
+        const val TRANSFER_OPERATION_TIMER = "transfer.operation.duration"
     }
 }

@@ -1,8 +1,7 @@
 package com.moura.picpay.backend.challenge.domain.transfer
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
-import com.moura.picpay.backend.challenge.domain.transfer.api.TransferRequest
-import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationService
+import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationClient
 import com.moura.picpay.backend.challenge.domain.transfer.metrics.TransferMetricsModule
 import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
@@ -12,6 +11,7 @@ import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRe
 import com.moura.picpay.backend.challenge.domain.user.UserService
 import com.moura.picpay.backend.challenge.domain.user.model.User
 import com.moura.picpay.backend.challenge.domain.user.model.UserType
+import com.moura.picpay.backend.challenge.infrastructure.http.transfer.api.TransferRequest
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -25,7 +25,7 @@ private val logger = KotlinLogging.logger {}
 class TransferService(
     private val transferRepository: TransferRepository,
     private val userService: UserService,
-    private val authorizationService: TransferAuthorizationService,
+    private val authorizationClient: TransferAuthorizationClient,
     private val transactional: TransactionalOperator,
     private val notificationSender: NotificationSender,
     private val metrics: TransferMetricsModule,
@@ -83,8 +83,8 @@ class TransferService(
                 )
             }
 
-            authorizationService.isAuthorized().not() -> {
-                throw PicPayException.TransferAuthorization("Transfer was not authorized")
+            authorizationClient.isAuthorized().not() -> {
+                throw PicPayException.TransferAuthorization()
             }
         }
     }

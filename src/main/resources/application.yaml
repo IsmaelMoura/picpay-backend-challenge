@@ -20,11 +20,11 @@ spring:
       key-store-location: file:${KAFKA_KEYSTORE_LOCATION}
       key-password: ${KAFKA_KEYSTORE_PASSWORD}
 
-picpay-backend-challenge:
+application:
   transfer:
     authorization:
       host: ${TRANSFER_AUTHORIZATION_HOST}
-      path: /api/v1/transfers/authorization
+      path: api/v1/transfers/authorization
     notification:
       kafka:
         topic: picpay.traffic.transfer.notification

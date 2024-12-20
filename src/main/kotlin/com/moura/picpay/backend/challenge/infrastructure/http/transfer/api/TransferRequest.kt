@@ -1,0 +1,15 @@
+package com.moura.picpay.backend.challenge.infrastructure.http.transfer.api
+
+import com.moura.picpay.backend.challenge.domain.user.model.UserId
+import org.jetbrains.annotations.TestOnly
+import java.io.Serializable
+import java.math.BigDecimal
+
+data class TransferRequest(
+    val value: BigDecimal,
+    val payer: UserId,
+    val payee: UserId,
+) : Serializable {
+    @TestOnly
+    companion object
+}

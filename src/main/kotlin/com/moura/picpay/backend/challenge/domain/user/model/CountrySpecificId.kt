@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 
 @JvmInline
-value class CountrySpecificId(val value: String) : Serializable {
+value class CountrySpecificId(val value: String) : Serializable, CharSequence by value {
     @Component
     @WritingConverter
     object ToStringConverter : Converter<CountrySpecificId, String> {

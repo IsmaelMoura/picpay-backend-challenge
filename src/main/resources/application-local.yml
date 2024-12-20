@@ -15,7 +15,7 @@ spring:
     security:
       protocol: PLAINTEXT
 
-picpay-backend-challenge:
+application:
   transfer:
     authorization:
       host: http://localhost:9090

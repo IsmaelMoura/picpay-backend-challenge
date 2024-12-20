@@ -2,10 +2,6 @@ package com.moura.picpay.backend.challenge.domain.user
 
 import com.moura.picpay.backend.challenge.IntegrationTest
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
-import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
-import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
-import com.moura.picpay.backend.challenge.domain.user.api.create
-import com.moura.picpay.backend.challenge.domain.user.api.randomList
 import com.moura.picpay.backend.challenge.domain.user.model.CountrySpecificId
 import com.moura.picpay.backend.challenge.domain.user.model.User
 import com.moura.picpay.backend.challenge.domain.user.model.UserId
@@ -13,6 +9,10 @@ import com.moura.picpay.backend.challenge.domain.user.model.UserType
 import com.moura.picpay.backend.challenge.domain.user.model.random
 import com.moura.picpay.backend.challenge.domain.user.model.randomList
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.FetchUsersQueryParametersRequest
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.create
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.randomList
 import com.moura.picpay.backend.challenge.utils.randomEmail
 import com.moura.picpay.backend.challenge.utils.randomEmailList
 import com.moura.picpay.backend.challenge.utils.randomFullName

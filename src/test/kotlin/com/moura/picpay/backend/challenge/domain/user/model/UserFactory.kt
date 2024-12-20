@@ -1,6 +1,6 @@
 package com.moura.picpay.backend.challenge.domain.user.model
 
-import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.CreateUserRequest
 import com.moura.picpay.backend.challenge.utils.randomEmail
 import com.moura.picpay.backend.challenge.utils.randomFullName
 import com.moura.picpay.backend.challenge.utils.randomPassword

@@ -1,12 +1,12 @@
 package com.moura.picpay.backend.challenge.domain.user
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
-import com.moura.picpay.backend.challenge.domain.user.api.CreateUserRequest
-import com.moura.picpay.backend.challenge.domain.user.api.FetchUsersQueryParametersRequest
 import com.moura.picpay.backend.challenge.domain.user.model.User
 import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserEntity
 import com.moura.picpay.backend.challenge.domain.user.persistence.UserRepository
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.CreateUserRequest
+import com.moura.picpay.backend.challenge.infrastructure.http.user.api.FetchUsersQueryParametersRequest
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
