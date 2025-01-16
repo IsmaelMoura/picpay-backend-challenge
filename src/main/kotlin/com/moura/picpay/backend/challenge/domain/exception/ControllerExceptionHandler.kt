@@ -11,7 +11,7 @@ class ControllerExceptionHandler {
 
     @ExceptionHandler(PicPayException::class)
     fun handlePicPayException(exception: PicPayException): ProblemDetail {
-        logger.warn(exception) { "Handling ${exception::class.simpleName} exception (message: ${exception.message})" }
+        logger.debug { "Handling ${exception::class.simpleName} exception (error: $exception)" }
 
         return exception.toProblemDetail()
     }

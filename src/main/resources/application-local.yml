@@ -19,3 +19,7 @@ application:
   transfer:
     authorization:
       host: http://localhost:9090
+
+logging:
+  level:
+    com.moura: trace

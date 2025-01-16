@@ -1,7 +1,7 @@
 package com.moura.picpay.backend.challenge.infrastructure.http.transfer.api
 
 import com.moura.picpay.backend.challenge.domain.mappings.V1_TRANSFER_PATH
-import com.moura.picpay.backend.challenge.domain.transfer.TransferService
+import com.moura.picpay.backend.challenge.domain.transfer.executor.TransferExecutor
 import com.moura.picpay.backend.challenge.infrastructure.http.transfer.api.validation.TransferValidator
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.slf4j.MDCContext
@@ -19,23 +19,23 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping(V1_TRANSFER_PATH)
 class TransferController(
     private val transferValidator: TransferValidator,
-    private val transferService: TransferService,
+    private val transferExecutor: TransferExecutor,
 ) {
     @PostMapping
     suspend fun sendTransfer(
         @RequestBody transfer: TransferRequest,
     ): ResponseEntity<TransferResponse> {
         return withContext(MDCContext()) {
-            logger.info { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
+            logger.debug { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
 
             transferValidator.validate(transfer)
-                .let { transferService.transfer(transfer) }
-                .also { logger.info { "Transfer [$it] created successfully" } }
-                .let { id ->
+                .let { transferExecutor.execute(transfer) }
+                .map { id ->
                     ResponseEntity
                         .status(HttpStatus.ACCEPTED)
                         .body(TransferResponse(id))
                 }
+                .getOrThrow()
         }
     }
 }

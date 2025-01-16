@@ -1,11 +1,10 @@
-package com.moura.picpay.backend.challenge.domain.transfer
+package com.moura.picpay.backend.challenge.domain.transfer.executor
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.transfer.authorization.TransferAuthorizationClient
-import com.moura.picpay.backend.challenge.domain.transfer.metrics.TransferMetricsModule
 import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
-import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
+import com.moura.picpay.backend.challenge.domain.transfer.notification.TransferNotificationSender
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferEntity
 import com.moura.picpay.backend.challenge.domain.transfer.persistence.TransferRepository
 import com.moura.picpay.backend.challenge.domain.user.UserService
@@ -15,44 +14,45 @@ import com.moura.picpay.backend.challenge.infrastructure.http.transfer.api.Trans
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.springframework.stereotype.Service
-import org.springframework.transaction.reactive.TransactionalOperator
-import org.springframework.transaction.reactive.executeAndAwait
 
-private val logger = KotlinLogging.logger {}
-
-@Service
-class TransferService(
+class TransferExecutorImpl(
     private val transferRepository: TransferRepository,
     private val userService: UserService,
     private val authorizationClient: TransferAuthorizationClient,
-    private val transactional: TransactionalOperator,
-    private val notificationSender: NotificationSender,
-    private val metrics: TransferMetricsModule,
-) {
-    suspend fun transfer(request: TransferRequest): TransferId {
-        return metrics.measureTransferOperation {
-            transactional.executeAndAwait {
-                coroutineScope {
-                    val payer = async { userService.getById(request.payer) }
-                    val payee = async { userService.getById(request.payee) }
+    private val transferNotificationSender: TransferNotificationSender,
+) : TransferExecutor {
+    private val logger = KotlinLogging.logger {}
 
-                    payer.await().checkIsAllowedToTransfer(request)
+    override suspend fun execute(request: TransferRequest): Result<TransferId> {
+        return runCatching {
+            coroutineScope {
+                val payer = async { userService.getById(request.payer) }
+                val payee = async { userService.getById(request.payee) }
 
-                    val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
-                    val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
-                    val transfer =
-                        createTransfer(
-                            request = request,
-                            payee = updatedPayee.await(),
-                            payer = updatedPayer.await(),
-                        )
+                payer.await().checkIsAllowedToTransfer(request)
 
-                    notificationSender.sendNotification(transfer)
+                val updatedPayee = async { userService.updateUser(payee.await().withIncreasedBalance(request.value)) }
+                val updatedPayer = async { userService.updateUser(payer.await().withDecreasedBalance(request.value)) }
+                val transfer =
+                    createTransfer(
+                        request = request,
+                        payee = updatedPayee.await(),
+                        payer = updatedPayer.await(),
+                    )
 
-                    transfer.id
-                }
+                transferNotificationSender.send(transfer)
+
+                transfer.id
             }
+        }.onSuccess {
+            logger.info {
+                "Successfully executed transfer (" +
+                    "transferId: ${it.value}, " +
+                    "payee: ${request.payee}, " +
+                    "payer: ${request.payer})"
+            }
+        }.onFailure { cause ->
+            logger.warn(cause) { "Failed to execute transfer (payee: ${request.payee}, payee: ${request.payer})" }
         }
     }
 

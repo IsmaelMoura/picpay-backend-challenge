@@ -2,7 +2,7 @@ package com.moura.picpay.backend.challenge.infrastructure.http.transfer.api
 
 import com.moura.picpay.backend.challenge.domain.exception.PicPayException
 import com.moura.picpay.backend.challenge.domain.mappings.V1_TRANSFER_PATH
-import com.moura.picpay.backend.challenge.domain.transfer.TransferService
+import com.moura.picpay.backend.challenge.domain.transfer.executor.TransferExecutor
 import com.moura.picpay.backend.challenge.domain.transfer.model.TransferId
 import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import com.moura.picpay.backend.challenge.domain.user.model.random
@@ -32,7 +32,7 @@ class TransferControllerTest {
     private lateinit var transferValidator: TransferValidator
 
     @field:MockkBean
-    private lateinit var transferService: TransferService
+    private lateinit var transferExecutor: TransferExecutor
 
     @Test
     fun `should create transfer successfully`() =
@@ -40,7 +40,7 @@ class TransferControllerTest {
             val request = TransferRequest.create()
             val transferId = TransferId.random()
 
-            coEvery { transferService.transfer(request) } returns transferId
+            coEvery { transferExecutor.execute(request) } returns Result.success(transferId)
 
             webClient.post()
                 .uri(V1_TRANSFER_PATH)
@@ -50,7 +50,7 @@ class TransferControllerTest {
                 .returnSingleBody<TransferResponse>() shouldBeEqual TransferResponse(transferId)
 
             coVerify { transferValidator.validate(request) }
-            coVerify { transferService.transfer(request) }
+            coVerify { transferExecutor.execute(request) }
         }
 
     @Test
@@ -65,14 +65,16 @@ class TransferControllerTest {
             .expectStatus().isBadRequest
 
         coVerify { transferValidator.validate(request) }
-        coVerify(exactly = 0) { transferService.transfer(request) }
+        coVerify(exactly = 0) { transferExecutor.execute(request) }
     }
 
     @Test
     fun `should return BAD_REQUEST when service throws UserNotAllowedToTransfer`() {
         val request = TransferRequest.create()
 
-        coEvery { transferService.transfer(request) } throws PicPayException.UserNotAllowedToTransfer("Invalid user", UserId.random())
+        coEvery {
+            transferExecutor.execute(request)
+        } returns Result.failure(PicPayException.UserNotAllowedToTransfer("Invalid user", UserId.random()))
 
         webClient.post()
             .uri(V1_TRANSFER_PATH)
@@ -81,14 +83,14 @@ class TransferControllerTest {
             .expectStatus().isBadRequest
 
         coVerify { transferValidator.validate(request) }
-        coVerify { transferService.transfer(request) }
+        coVerify { transferExecutor.execute(request) }
     }
 
     @Test
     fun `should return FORBIDDEN when service throw TransferAuthorization exception`() {
         val request = TransferRequest.create()
 
-        coEvery { transferService.transfer(request) } throws PicPayException.TransferAuthorization()
+        coEvery { transferExecutor.execute(request) } returns Result.failure(PicPayException.TransferAuthorization())
 
         webClient.post()
             .uri(V1_TRANSFER_PATH)
@@ -96,7 +98,7 @@ class TransferControllerTest {
             .exchange()
             .expectStatus().isForbidden
 
-        coEvery { transferService.transfer(request) }
+        coEvery { transferExecutor.execute(request) }
         coEvery { transferValidator.validate(request) }
     }
 }

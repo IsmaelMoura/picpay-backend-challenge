@@ -2,11 +2,7 @@ package com.moura.picpay.backend.challenge.infrastructure.kafka.producer
 
 import com.moura.picpay.backend.challenge.domain.transfer.model.Transfer
 import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationMetricsModule
-import com.moura.picpay.backend.challenge.domain.transfer.notification.NotificationSender
-import com.moura.picpay.backend.challenge.domain.transfer.notification.SentResult
-import com.moura.picpay.backend.challenge.domain.transfer.notification.onFailure
-import com.moura.picpay.backend.challenge.domain.transfer.notification.onSuccess
-import com.moura.picpay.backend.challenge.domain.transfer.notification.sendCatching
+import com.moura.picpay.backend.challenge.domain.transfer.notification.TransferNotificationSender
 import com.moura.picpay.backend.challenge.notification.NotificationChannel
 import com.moura.picpay.backend.challenge.notification.SendTransferNotificationRequest
 import com.moura.picpay.backend.challenge.notification.sendTransferNotificationRequest
@@ -22,14 +18,14 @@ import reactor.kafka.sender.SenderResult
 private val logger = KotlinLogging.logger {}
 
 @Component
-class KafkaNotificationSender(
+class KafkaTransferNotificationSender(
     private val kafkaTemplate: ReactiveKafkaProducerTemplate<String, ByteArray>,
     private val properties: KafkaNotificationProperties,
     private val metrics: NotificationMetricsModule,
-) : NotificationSender {
-    override suspend fun sendNotification(transfer: Transfer): SentResult {
+) : TransferNotificationSender {
+    override suspend fun send(transfer: Transfer): Result<Unit> {
         return metrics.measureSendNotificationRequest {
-            sendCatching {
+            runCatching {
                 kafkaTemplate
                     .send(createProducerRecord(transfer))
                     .awaitSingle()
