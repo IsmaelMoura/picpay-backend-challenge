@@ -23,8 +23,8 @@ class TransferExecutorImpl(
 ) : TransferExecutor {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun execute(request: TransferRequest): Result<TransferId> {
-        return runCatching {
+    override suspend fun execute(request: TransferRequest): Result<TransferId> =
+        runCatching {
             coroutineScope {
                 val payer = async { userService.getById(request.payer) }
                 val payee = async { userService.getById(request.payee) }
@@ -54,18 +54,16 @@ class TransferExecutorImpl(
         }.onFailure { cause ->
             logger.warn(cause) { "Failed to execute transfer (payee: ${request.payee}, payee: ${request.payer})" }
         }
-    }
 
     private suspend fun createTransfer(
         request: TransferRequest,
         payee: User,
         payer: User,
-    ): Transfer {
-        return transferRepository
+    ): Transfer =
+        transferRepository
             .save(createTransferEntity(request))
             .toDomainTransfer(payee = payee, payer = payer)
             .also { logger.info { "Successfully created transfer [${it.id}] (payee: ${it.payee.id}, payer: ${it.payer.id})" } }
-    }
 
     private suspend fun User.checkIsAllowedToTransfer(request: TransferRequest) {
         when {
@@ -89,23 +87,21 @@ class TransferExecutorImpl(
         }
     }
 
-    private fun createTransferEntity(request: TransferRequest): TransferEntity {
-        return TransferEntity(
+    private fun createTransferEntity(request: TransferRequest): TransferEntity =
+        TransferEntity(
             payeeId = request.payee,
             payerId = request.payer,
             amount = request.value,
         )
-    }
 
     private fun TransferEntity.toDomainTransfer(
         payee: User,
         payer: User,
-    ): Transfer {
-        return Transfer(
+    ): Transfer =
+        Transfer(
             id = id,
             payee = payee,
             payer = payer,
             amount = amount,
         )
-    }
 }

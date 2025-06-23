@@ -2,8 +2,12 @@ package com.moura.picpay.backend.challenge.infrastructure.http.transfer.authoriz
 
 import java.io.Serializable
 
-data class AuthorizationResponse(val data: Data) : Serializable {
+data class AuthorizationResponse(
+    val data: Data,
+) : Serializable {
     val isAuthorized: Boolean = data.authorization
 
-    data class Data(val authorization: Boolean) : Serializable
+    data class Data(
+        val authorization: Boolean,
+    ) : Serializable
 }

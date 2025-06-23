@@ -8,21 +8,19 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 
 @JvmInline
-value class UserId(val value: Long) : Serializable {
+value class UserId(
+    val value: Long,
+) : Serializable {
     @Component
     @WritingConverter
     object ToLongConverter : Converter<UserId, Long> {
-        override fun convert(source: UserId): Long {
-            return source.value
-        }
+        override fun convert(source: UserId): Long = source.value
     }
 
     @Component
     @ReadingConverter
     object FromLongConverter : Converter<Long, UserId> {
-        override fun convert(source: Long): UserId {
-            return UserId(source)
-        }
+        override fun convert(source: Long): UserId = UserId(source)
     }
 
     @TestOnly

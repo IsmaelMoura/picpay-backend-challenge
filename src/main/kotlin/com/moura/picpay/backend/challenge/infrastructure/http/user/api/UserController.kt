@@ -6,10 +6,7 @@ import com.moura.picpay.backend.challenge.domain.user.model.User
 import com.moura.picpay.backend.challenge.domain.user.model.UserId
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,40 +26,33 @@ class UserController(
     @PostMapping
     suspend fun createUser(
         @RequestBody request: CreateUserRequest,
-    ): ResponseEntity<Unit> {
-        return withContext(MDCContext()) {
-            userService
-                .also { logger.info { "Received create user request (userType: [${request.type}])" } }
-                .createUser(request)
-                .run {
-                    ResponseEntity
-                        .created(URI.create("$V1_USERS_PATH/${id.value}"))
-                        .build()
-                }
-        }
-    }
+    ): ResponseEntity<Unit> =
+        userService
+            .also { logger.info { "Received create user request (userType: [${request.type}])" } }
+            .createUser(request)
+            .run {
+                ResponseEntity
+                    .created(URI.create("$V1_USERS_PATH/${id.value}"))
+                    .build()
+            }
 
     @GetMapping("/{id}")
     suspend fun getUserById(
         @PathVariable id: UserId,
-    ): ResponseEntity<GetUserResponse> {
-        return withContext(MDCContext()) {
-            userService.getById(id)
-                .toGetUserResponse()
-                .let { ResponseEntity.ok(it) }
-        }
-    }
+    ): ResponseEntity<GetUserResponse> =
+        userService
+            .getById(id)
+            .toGetUserResponse()
+            .let { ResponseEntity.ok(it) }
 
     @GetMapping
-    fun fetchUsers(request: FetchUsersQueryParametersRequest = FetchUsersQueryParametersRequest()): Flow<GetUserResponse> {
-        return userService
+    fun fetchUsers(request: FetchUsersQueryParametersRequest = FetchUsersQueryParametersRequest()): Flow<GetUserResponse> =
+        userService
             .getAllUsers(request)
             .map { it.toGetUserResponse() }
-            .flowOn(MDCContext())
-    }
 
-    private fun User.toGetUserResponse(): GetUserResponse {
-        return GetUserResponse(
+    private fun User.toGetUserResponse(): GetUserResponse =
+        GetUserResponse(
             id = id,
             countrySpecificId = countrySpecificId,
             fullName = fullName,
@@ -70,5 +60,4 @@ class UserController(
             type = type,
             balance = balance,
         )
-    }
 }

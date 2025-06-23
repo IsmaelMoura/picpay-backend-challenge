@@ -8,13 +8,14 @@ sealed class PicPayException(
     override val message: String,
     private val status: HttpStatus,
 ) : RuntimeException(message) {
-    fun toProblemDetail(): ProblemDetail {
-        return ProblemDetail.forStatusAndDetail(status, message).apply { setSpecificInfo() }
-    }
+    fun toProblemDetail(): ProblemDetail = ProblemDetail.forStatusAndDetail(status, message).apply { setSpecificInfo() }
 
     protected abstract fun ProblemDetail.setSpecificInfo()
 
-    data class FieldViolation(val field: String, val description: String)
+    data class FieldViolation(
+        val field: String,
+        val description: String,
+    )
 
     class TransferValidation(
         private val errors: Set<FieldViolation>,
@@ -37,7 +38,9 @@ sealed class PicPayException(
         }
     }
 
-    class UserNotFound(private val userId: UserId) : PicPayException("User does not exist.", HttpStatus.NOT_FOUND) {
+    class UserNotFound(
+        private val userId: UserId,
+    ) : PicPayException("User does not exist.", HttpStatus.NOT_FOUND) {
         override fun ProblemDetail.setSpecificInfo() {
             setProperty("user_id", userId)
         }

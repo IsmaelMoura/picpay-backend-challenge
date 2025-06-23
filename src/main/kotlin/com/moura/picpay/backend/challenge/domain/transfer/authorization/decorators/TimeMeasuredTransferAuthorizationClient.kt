@@ -11,18 +11,17 @@ class TimeMeasuredTransferAuthorizationClient(
     private val decorated: TransferAuthorizationClient,
     private val meterRegistry: MeterRegistry,
 ) : TransferAuthorizationClient {
-    override suspend fun isAuthorized(): Boolean {
-        return measureTimedValue { decorated.isAuthorized() }
+    override suspend fun isAuthorized(): Boolean =
+        measureTimedValue { decorated.isAuthorized() }
             .apply {
-                meterRegistry.timer(
-                    TRANSFER_AUTHORIZATION_TIMER,
-                    Tags.of(
-                        Tag.of(IS_AUTHORIZED_TAG, value.toString()),
-                    ),
-                ).record(duration.toJavaDuration())
-            }
-            .value
-    }
+                meterRegistry
+                    .timer(
+                        TRANSFER_AUTHORIZATION_TIMER,
+                        Tags.of(
+                            Tag.of(IS_AUTHORIZED_TAG, value.toString()),
+                        ),
+                    ).record(duration.toJavaDuration())
+            }.value
 
     companion object {
         const val TRANSFER_AUTHORIZATION_TIMER = "transfer.authorization"

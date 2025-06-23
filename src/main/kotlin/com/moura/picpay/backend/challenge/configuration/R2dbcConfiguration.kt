@@ -14,8 +14,8 @@ import org.springframework.data.r2dbc.dialect.DialectResolver
 @EnableR2dbcAuditing
 class R2dbcConfiguration {
     @Bean
-    fun r2dbcCustomConversions(connectionFactory: ConnectionFactory): R2dbcCustomConversions {
-        return R2dbcCustomConversions.of(
+    fun r2dbcCustomConversions(connectionFactory: ConnectionFactory): R2dbcCustomConversions =
+        R2dbcCustomConversions.of(
             DialectResolver.getDialect(connectionFactory),
             setOf(
                 UserId.ToLongConverter,
@@ -26,5 +26,4 @@ class R2dbcConfiguration {
                 CountrySpecificId.FromStringConverter,
             ),
         )
-    }
 }

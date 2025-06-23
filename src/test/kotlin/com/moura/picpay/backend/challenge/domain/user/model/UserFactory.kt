@@ -13,10 +13,10 @@ fun User.Companion.create(
     fullName: String = String.randomFullName(),
     email: String = String.randomEmail(),
     password: String = String.randomPassword(),
-    type: UserType = com.moura.picpay.backend.challenge.domain.user.model.UserType.entries.random(),
+    type: UserType = UserType.entries.random(),
     balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
-): User {
-    return User(
+): User =
+    User(
         id = id,
         countrySpecificId = countrySpecificId,
         fullName = fullName,
@@ -25,10 +25,9 @@ fun User.Companion.create(
         type = type,
         balance = balance,
     )
-}
 
-fun User.Companion.createFrom(request: CreateUserRequest): User {
-    return with(request) {
+fun User.Companion.createFrom(request: CreateUserRequest): User =
+    with(request) {
         create(
             countrySpecificId = countrySpecificId,
             fullName = fullName,
@@ -37,6 +36,5 @@ fun User.Companion.createFrom(request: CreateUserRequest): User {
             type = type,
         )
     }
-}
 
 fun User.Companion.createList(size: Int = Random.nextInt(10, 20)) = List(size) { create() }

@@ -21,14 +21,12 @@ class TransferExecutorConfig {
         transferNotificationSender: TransferNotificationSender,
         transactionalOperator: TransactionalOperator,
         meterRegistry: MeterRegistry,
-    ): TransferExecutor {
-        return TransferExecutorImpl(
+    ): TransferExecutor =
+        TransferExecutorImpl(
             transferRepository = transferRepository,
             userService = userService,
             authorizationClient = authorizationClient,
             transferNotificationSender = transferNotificationSender,
-        )
-            .withTransaction(transactionalOperator)
+        ).withTransaction(transactionalOperator)
             .withTimeMeasured(meterRegistry)
-    }
 }

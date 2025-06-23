@@ -10,10 +10,9 @@ fun TransferRequest.Companion.create(
     value: BigDecimal = BigDecimal.valueOf(Random.nextDouble(TransferValidator.MIN_AMOUNT_VALUE.toDouble(), Double.MAX_VALUE)),
     payer: UserId = UserId.random(),
     payee: UserId = UserId.random(),
-): TransferRequest {
-    return TransferRequest(
+): TransferRequest =
+    TransferRequest(
         value = value,
         payer = payer,
         payee = payee,
     )
-}

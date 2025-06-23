@@ -13,8 +13,8 @@ class TransactionalTransferExecutor(
 ) : TransferExecutor {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun execute(request: TransferRequest): Result<TransferId> {
-        return runCatching {
+    override suspend fun execute(request: TransferRequest): Result<TransferId> =
+        runCatching {
             transaction.executeAndAwait {
                 decorated.execute(request).getOrThrow()
             }
@@ -27,9 +27,7 @@ class TransactionalTransferExecutor(
         }.onFailure { cause ->
             logger.trace(cause) { "Failed to execute transfer within a transaction (request: $request)" }
         }
-    }
 }
 
-fun TransferExecutor.withTransaction(transaction: TransactionalOperator): TransactionalTransferExecutor {
-    return TransactionalTransferExecutor(this, transaction)
-}
+fun TransferExecutor.withTransaction(transaction: TransactionalOperator): TransactionalTransferExecutor =
+    TransactionalTransferExecutor(this, transaction)

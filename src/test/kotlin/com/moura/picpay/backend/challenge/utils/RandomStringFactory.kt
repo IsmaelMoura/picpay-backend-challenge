@@ -1,14 +1,13 @@
 package com.moura.picpay.backend.challenge.utils
 
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
 import kotlin.random.Random
+import org.apache.commons.lang3.RandomStringUtils.insecure as insecureRandom
 
-fun String.Companion.randomFullName() = "${randomAlphabetic(10, 20)} ${randomAlphabetic(10, 20)}"
+fun String.Companion.randomFullName() = "${insecureRandom().nextAlphabetic(10, 20)} ${insecureRandom().nextAlphabetic(10, 20)}"
 
-fun String.Companion.randomEmail() = "${randomAlphabetic(10, 20)}-${randomAlphabetic(10, 20)}@email.com"
+fun String.Companion.randomEmail() = "${insecureRandom().nextAlphabetic(10, 20)}-${insecureRandom().nextAlphabetic(10, 20)}@email.com"
 
-fun String.Companion.randomPassword(): String = randomAlphanumeric(20)
+fun String.Companion.randomPassword(): String = insecureRandom().nextAlphanumeric(20)
 
 fun String.Companion.randomFullNameList(size: Int = Random.nextInt(10, 20)) = List(size) { randomFullName() }
 

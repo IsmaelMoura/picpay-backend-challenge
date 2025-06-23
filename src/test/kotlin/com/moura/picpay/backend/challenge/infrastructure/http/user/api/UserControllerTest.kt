@@ -47,12 +47,15 @@ class UserControllerTest {
 
         coEvery { userService.createUser(request) } returns user
 
-        webClient.post()
+        webClient
+            .post()
             .uri(V1_USERS_PATH)
             .body(BodyInserters.fromValue(request))
             .exchange()
-            .expectStatus().isCreated
-            .expectHeader().location(V1_USERS_PATH + "/${user.id.value}")
+            .expectStatus()
+            .isCreated
+            .expectHeader()
+            .location(V1_USERS_PATH + "/${user.id.value}")
 
         coVerify { userService.createUser(request) }
     }
@@ -65,10 +68,12 @@ class UserControllerTest {
 
             coEvery { userService.getById(userId) } returns user
 
-            webClient.get()
+            webClient
+                .get()
                 .uri(V1_USERS_PATH + "/${userId.value}")
                 .exchange()
-                .expectStatus().isOk
+                .expectStatus()
+                .isOk
                 .returnSingleBody<GetUserResponse>() shouldBeEqual GetUserResponse.createFrom(user)
         }
 
@@ -78,10 +83,12 @@ class UserControllerTest {
 
         coEvery { userService.getById(userId) } throws PicPayException.UserNotFound(userId)
 
-        webClient.get()
+        webClient
+            .get()
             .uri(V1_USERS_PATH + "/${userId.value}")
             .exchange()
-            .expectStatus().isNotFound
+            .expectStatus()
+            .isNotFound
     }
 
     @Test
@@ -92,10 +99,12 @@ class UserControllerTest {
 
             coEvery { userService.getAllUsers(request) } returns users.asFlow()
 
-            webClient.get()
+            webClient
+                .get()
                 .uri { builder -> builder.buildFetchUsers(request) }
                 .exchange()
-                .expectStatus().isOk
+                .expectStatus()
+                .isOk
                 .returnListBody<GetUserResponse>()
                 .shouldContainExactlyInAnyOrder(users.map(GetUserResponse::createFrom))
         }
@@ -106,23 +115,23 @@ class UserControllerTest {
             val request = FetchUsersQueryParametersRequest.create()
             coEvery { userService.getAllUsers(request) } returns emptyFlow()
 
-            webClient.get()
+            webClient
+                .get()
                 .uri { builder -> builder.buildFetchUsers(request) }
                 .exchange()
-                .expectStatus().isOk
+                .expectStatus()
+                .isOk
                 .returnListBody<GetUserResponse>()
                 .shouldBeEmpty()
         }
 
-    private fun UriBuilder.buildFetchUsers(request: FetchUsersQueryParametersRequest): URI {
-        return path(V1_USERS_PATH)
+    private fun UriBuilder.buildFetchUsers(request: FetchUsersQueryParametersRequest): URI =
+        path(V1_USERS_PATH)
             .queryParam(
                 FetchUsersQueryParametersRequest::countrySpecificIds.name,
                 request.countrySpecificIds?.map(CountrySpecificId::value),
-            )
-            .queryParam(FetchUsersQueryParametersRequest::fullNames.name, request.fullNames)
+            ).queryParam(FetchUsersQueryParametersRequest::fullNames.name, request.fullNames)
             .queryParam(FetchUsersQueryParametersRequest::emails.name, request.emails)
             .queryParam(FetchUsersQueryParametersRequest::type.name, request.type)
             .build()
-    }
 }

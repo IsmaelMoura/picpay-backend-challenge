@@ -4,8 +4,6 @@ import com.moura.picpay.backend.challenge.domain.mappings.V1_TRANSFER_PATH
 import com.moura.picpay.backend.challenge.domain.transfer.executor.TransferExecutor
 import com.moura.picpay.backend.challenge.infrastructure.http.transfer.api.validation.TransferValidator
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,17 +23,15 @@ class TransferController(
     suspend fun sendTransfer(
         @RequestBody transfer: TransferRequest,
     ): ResponseEntity<TransferResponse> {
-        return withContext(MDCContext()) {
-            logger.debug { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
+        logger.debug { "Received transfer request (payer: ${transfer.payer}, payee: ${transfer.payee})" }
 
-            transferValidator.validate(transfer)
-                .let { transferExecutor.execute(transfer) }
-                .map { id ->
-                    ResponseEntity
-                        .status(HttpStatus.ACCEPTED)
-                        .body(TransferResponse(id))
-                }
-                .getOrThrow()
-        }
+        return transferValidator
+            .validate(transfer)
+            .let { transferExecutor.execute(transfer) }
+            .map { id ->
+                ResponseEntity
+                    .status(HttpStatus.ACCEPTED)
+                    .body(TransferResponse(id))
+            }.getOrThrow()
     }
 }

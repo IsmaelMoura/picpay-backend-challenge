@@ -16,8 +16,6 @@ fun CreateUserRequest.Companion.create(
     password: String = String.randomPassword(),
     type: UserType = UserType.entries.random(),
     balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
-): CreateUserRequest {
-    return CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
-}
+): CreateUserRequest = CreateUserRequest(countrySpecificId, fullName, email, password, type, balance)
 
 fun CreateUserRequest.Companion.randomList(size: Int = Random.nextInt(10, 20)) = List(size) { create() }

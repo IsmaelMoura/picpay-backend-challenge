@@ -9,47 +9,47 @@ import com.moura.picpay.backend.challenge.notification.sendTransferNotificationR
 import com.moura.picpay.backend.challenge.notification.transfer
 import com.moura.picpay.backend.challenge.notification.transferAmount
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.future.await
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
-import reactor.kafka.sender.SenderResult
 
 private val logger = KotlinLogging.logger {}
 
 @Component
 class KafkaTransferNotificationSender(
-    private val kafkaTemplate: ReactiveKafkaProducerTemplate<String, ByteArray>,
+    private val kafkaTemplate: KafkaTemplate<String, ByteArray>,
     private val properties: KafkaNotificationProperties,
     private val metrics: NotificationMetricsModule,
 ) : TransferNotificationSender {
-    override suspend fun send(transfer: Transfer): Result<Unit> {
-        return metrics.measureSendNotificationRequest {
+    override suspend fun send(transfer: Transfer): Result<Unit> =
+        metrics.measureSendNotificationRequest {
             runCatching {
-                kafkaTemplate
-                    .send(createProducerRecord(transfer))
-                    .awaitSingle()
-                    .throwOnFailure()
-            }
-                .onSuccess {
-                    logger.info { "Transfer [${transfer.id}] notification successfully sent to [${properties.topic}] topic" }
+                kafkaTemplate.send(createProducerRecord(transfer)).await()
+            }.onSuccess { result ->
+                with(result.recordMetadata) {
+                    logger.info {
+                        "Transfer notification successfully sent to kafka (" +
+                            "transferId: ${transfer.id}, " +
+                            "partition: ${partition()}, " +
+                            "offset: ${offset()}, " +
+                            "topic: ${topic()})."
+                    }
                 }
-                .onFailure { throwable ->
-                    logger.warn(throwable) { "Error while sending notification for transfer [${transfer.id}]" }
-                }
+            }.onFailure { throwable ->
+                logger.warn(throwable) { "Error while sending notification for transfer [${transfer.id}]" }
+            }.map { }
         }
-    }
 
-    private fun createProducerRecord(transfer: Transfer): ProducerRecord<String, ByteArray> {
-        return ProducerRecord(
+    private fun createProducerRecord(transfer: Transfer): ProducerRecord<String, ByteArray> =
+        ProducerRecord(
             properties.topic,
             transfer.id.value,
             createSendTransferNotificationRequest(transfer).toByteArray(),
         )
-    }
 
-    private fun createSendTransferNotificationRequest(transfer: Transfer): SendTransferNotificationRequest {
-        return sendTransferNotificationRequest {
+    private fun createSendTransferNotificationRequest(transfer: Transfer): SendTransferNotificationRequest =
+        sendTransferNotificationRequest {
             this.transfer =
                 transfer {
                     transferId = transfer.id.value
@@ -68,11 +68,4 @@ class KafkaTransferNotificationSender(
                 ),
             )
         }
-    }
-
-    private fun SenderResult<Void>.throwOnFailure() {
-        if (exception() != null) {
-            throw exception()
-        }
-    }
 }

@@ -8,21 +8,20 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 
 @JvmInline
-value class CountrySpecificId(val value: String) : Serializable, CharSequence by value {
+value class CountrySpecificId(
+    val value: String,
+) : Serializable,
+    CharSequence by value {
     @Component
     @WritingConverter
     object ToStringConverter : Converter<CountrySpecificId, String> {
-        override fun convert(source: CountrySpecificId): String {
-            return source.value
-        }
+        override fun convert(source: CountrySpecificId): String = source.value
     }
 
     @Component
     @ReadingConverter
     object FromStringConverter : Converter<String, CountrySpecificId> {
-        override fun convert(source: String): CountrySpecificId {
-            return CountrySpecificId(source)
-        }
+        override fun convert(source: String): CountrySpecificId = CountrySpecificId(source)
     }
 
     @TestOnly

@@ -11,21 +11,19 @@ import kotlin.time.toJavaDuration
 class NotificationMetricsModule(
     private val registry: MeterRegistry,
 ) {
-    suspend fun measureSendNotificationRequest(block: suspend () -> Result<Unit>): Result<Unit> {
-        return measureTimedValue { block() }
+    suspend fun measureSendNotificationRequest(block: suspend () -> Result<Unit>): Result<Unit> =
+        measureTimedValue { block() }
             .also { timedValue ->
-                Timer.builder(NOTIFICATION_SENDING_TIMER)
+                Timer
+                    .builder(NOTIFICATION_SENDING_TIMER)
                     .description("Send transfer notification to Kafka duration")
                     .tags(
                         setOf(
                             Tag.of(SEND_FAILED_TAG, (timedValue.value.isFailure).toString()),
                         ),
-                    )
-                    .register(registry)
+                    ).register(registry)
                     .record(timedValue.duration.toJavaDuration())
-            }
-            .value
-    }
+            }.value
 
     companion object {
         private const val NOTIFICATION_SENDING_TIMER = "transfer.notification.send"

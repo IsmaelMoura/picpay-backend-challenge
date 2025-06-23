@@ -42,11 +42,13 @@ class TransferControllerTest {
 
             coEvery { transferExecutor.execute(request) } returns Result.success(transferId)
 
-            webClient.post()
+            webClient
+                .post()
                 .uri(V1_TRANSFER_PATH)
                 .body(BodyInserters.fromValue(request))
                 .exchange()
-                .expectStatus().isAccepted
+                .expectStatus()
+                .isAccepted
                 .returnSingleBody<TransferResponse>() shouldBeEqual TransferResponse(transferId)
 
             coVerify { transferValidator.validate(request) }
@@ -62,7 +64,8 @@ class TransferControllerTest {
             .uri(V1_TRANSFER_PATH)
             .body(BodyInserters.fromValue(request))
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus()
+            .isBadRequest
 
         coVerify { transferValidator.validate(request) }
         coVerify(exactly = 0) { transferExecutor.execute(request) }
@@ -76,11 +79,13 @@ class TransferControllerTest {
             transferExecutor.execute(request)
         } returns Result.failure(PicPayException.UserNotAllowedToTransfer("Invalid user", UserId.random()))
 
-        webClient.post()
+        webClient
+            .post()
             .uri(V1_TRANSFER_PATH)
             .body(BodyInserters.fromValue(request))
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus()
+            .isBadRequest
 
         coVerify { transferValidator.validate(request) }
         coVerify { transferExecutor.execute(request) }
@@ -92,11 +97,13 @@ class TransferControllerTest {
 
         coEvery { transferExecutor.execute(request) } returns Result.failure(PicPayException.TransferAuthorization())
 
-        webClient.post()
+        webClient
+            .post()
             .uri(V1_TRANSFER_PATH)
             .body(BodyInserters.fromValue(request))
             .exchange()
-            .expectStatus().isForbidden
+            .expectStatus()
+            .isForbidden
 
         coEvery { transferExecutor.execute(request) }
         coEvery { transferValidator.validate(request) }

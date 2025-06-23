@@ -17,12 +17,10 @@ fun GetUserResponse.Companion.create(
     email: String = String.randomEmail(),
     type: UserType = UserType.entries.random(),
     balance: BigDecimal = BigDecimal.valueOf(Random.nextDouble()),
-): GetUserResponse {
-    return GetUserResponse(id, countrySpecificId, fullName, email, type, balance)
-}
+): GetUserResponse = GetUserResponse(id, countrySpecificId, fullName, email, type, balance)
 
-fun GetUserResponse.Companion.createFrom(user: User): GetUserResponse {
-    return with(user) {
+fun GetUserResponse.Companion.createFrom(user: User): GetUserResponse =
+    with(user) {
         create(
             id = id,
             countrySpecificId = countrySpecificId,
@@ -32,4 +30,3 @@ fun GetUserResponse.Companion.createFrom(user: User): GetUserResponse {
             balance = balance,
         )
     }
-}

@@ -10,25 +10,23 @@ import com.moura.picpay.backend.challenge.utils.randomFullNameList
 fun FetchUsersQueryParametersRequest.Companion.createFrom(
     users: Collection<User>,
     type: UserType? = null,
-): FetchUsersQueryParametersRequest {
-    return FetchUsersQueryParametersRequest(
+): FetchUsersQueryParametersRequest =
+    FetchUsersQueryParametersRequest(
         countrySpecificIds = users.map(User::countrySpecificId),
         fullNames = users.map(User::fullName),
         emails = users.map(User::email),
         type = type,
     )
-}
 
 fun FetchUsersQueryParametersRequest.Companion.create(
     countrySpecificIds: List<CountrySpecificId>? = CountrySpecificId.randomList(),
     fullNames: List<String>? = String.randomFullNameList(),
     emails: List<String>? = String.randomEmailList(),
     type: UserType? = UserType.entries.random(),
-): FetchUsersQueryParametersRequest {
-    return FetchUsersQueryParametersRequest(
+): FetchUsersQueryParametersRequest =
+    FetchUsersQueryParametersRequest(
         countrySpecificIds = countrySpecificIds,
         fullNames = fullNames,
         emails = emails,
         type = type,
     )
-}

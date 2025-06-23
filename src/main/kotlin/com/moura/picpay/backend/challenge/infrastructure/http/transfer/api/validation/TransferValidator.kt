@@ -9,20 +9,18 @@ import java.math.BigDecimal
 @Component
 class TransferValidator {
     @Throws(PicPayException.TransferValidation::class)
-    fun validate(request: TransferRequest): TransferRequest {
-        return createViolations(request)
+    fun validate(request: TransferRequest): TransferRequest =
+        createViolations(request)
             .takeIf { it.isNotEmpty() }
             ?.let { throw PicPayException.TransferValidation(it) }
             ?: request
-    }
 
-    private fun createViolations(request: TransferRequest): Set<FieldViolation> {
-        return buildSet {
+    private fun createViolations(request: TransferRequest): Set<FieldViolation> =
+        buildSet {
             if (request.value < MIN_AMOUNT_VALUE) {
                 add(FieldViolation(VALUE_FIELD_NAME, "Transfer value must be greater than 0"))
             }
         }
-    }
 
     companion object {
         private val VALUE_FIELD_NAME: String = TransferRequest::value.name

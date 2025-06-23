@@ -143,19 +143,21 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should return users filtering by countrySpecificIds`() =
         runTest {
             val users =
-                CountrySpecificId.randomList()
+                CountrySpecificId
+                    .randomList()
                     .map { CreateUserRequest.create(countrySpecificId = it) }
                     .map { underTest.createUser(it) }
 
             CreateUserRequest.randomList().map { underTest.createUser(it) }
 
             val result =
-                underTest.getAllUsers(
-                    request =
-                        FetchUsersQueryParametersRequest(
-                            countrySpecificIds = users.map(User::countrySpecificId),
-                        ),
-                ).toList()
+                underTest
+                    .getAllUsers(
+                        request =
+                            FetchUsersQueryParametersRequest(
+                                countrySpecificIds = users.map(User::countrySpecificId),
+                            ),
+                    ).toList()
 
             result shouldContainExactlyInAnyOrder users
         }
@@ -164,19 +166,21 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should return users filtering by fullNames correctly`() =
         runTest {
             val users =
-                String.randomFullNameList()
+                String
+                    .randomFullNameList()
                     .map { CreateUserRequest.create(fullName = it) }
                     .map { underTest.createUser(it) }
 
             CreateUserRequest.randomList().map { underTest.createUser(it) }
 
             val result =
-                underTest.getAllUsers(
-                    request =
-                        FetchUsersQueryParametersRequest(
-                            fullNames = users.map(User::fullName),
-                        ),
-                ).toList()
+                underTest
+                    .getAllUsers(
+                        request =
+                            FetchUsersQueryParametersRequest(
+                                fullNames = users.map(User::fullName),
+                            ),
+                    ).toList()
 
             result shouldContainExactlyInAnyOrder users
         }
@@ -185,19 +189,21 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should return users filtering by email correctly`() =
         runTest {
             val users =
-                String.randomEmailList()
+                String
+                    .randomEmailList()
                     .map { CreateUserRequest.create(email = it) }
                     .map { underTest.createUser(it) }
 
             CreateUserRequest.randomList().map { underTest.createUser(it) }
 
             val result =
-                underTest.getAllUsers(
-                    request =
-                        FetchUsersQueryParametersRequest(
-                            emails = users.map(User::email),
-                        ),
-                ).toList()
+                underTest
+                    .getAllUsers(
+                        request =
+                            FetchUsersQueryParametersRequest(
+                                emails = users.map(User::email),
+                            ),
+                    ).toList()
 
             result shouldContainExactlyInAnyOrder users
         }
@@ -214,12 +220,13 @@ class UserServiceIntegrationTest : IntegrationTest() {
             CreateUserRequest.randomList().map { underTest.createUser(it.copy(type = UserType.MERCHANT)) }
 
             val result =
-                underTest.getAllUsers(
-                    request =
-                        FetchUsersQueryParametersRequest(
-                            type = userType,
-                        ),
-                ).toList()
+                underTest
+                    .getAllUsers(
+                        request =
+                            FetchUsersQueryParametersRequest(
+                                type = userType,
+                            ),
+                    ).toList()
 
             result shouldContainAll users
         }
@@ -228,17 +235,19 @@ class UserServiceIntegrationTest : IntegrationTest() {
     fun `should return users filtering by countrySpecificId and fullName correctly`() =
         runTest {
             val repeatedFullNames = String.randomFullName()
-            val users = CreateUserRequest.randomList().map { underTest.createUser(it.copy(fullName = repeatedFullNames)) }
+            val users =
+                CreateUserRequest.randomList().map { underTest.createUser(it.copy(fullName = repeatedFullNames)) }
             CreateUserRequest.randomList().map { underTest.createUser(it.copy(fullName = repeatedFullNames)) }
 
             val result =
-                underTest.getAllUsers(
-                    request =
-                        FetchUsersQueryParametersRequest(
-                            countrySpecificIds = users.map(User::countrySpecificId),
-                            fullNames = users.map(User::fullName),
-                        ),
-                ).toList()
+                underTest
+                    .getAllUsers(
+                        request =
+                            FetchUsersQueryParametersRequest(
+                                countrySpecificIds = users.map(User::countrySpecificId),
+                                fullNames = users.map(User::fullName),
+                            ),
+                    ).toList()
 
             result shouldContainExactlyInAnyOrder users
         }

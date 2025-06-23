@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class JacksonConfiguration {
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return jsonMapper {
+    fun objectMapper(): ObjectMapper =
+        jsonMapper {
             addModules(
                 JavaTimeModule(),
                 kotlinModule {
@@ -25,5 +25,4 @@ class JacksonConfiguration {
             enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
             propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
         }
-    }
 }

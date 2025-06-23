@@ -14,8 +14,8 @@ class TimeMeasuredTransferExecutor(
 ) : TransferExecutor {
     private val logger = KotlinLogging.logger {}
 
-    override suspend fun execute(request: TransferRequest): Result<TransferId> {
-        return measureTimedValue { decorated.execute(request) }
+    override suspend fun execute(request: TransferRequest): Result<TransferId> =
+        measureTimedValue { decorated.execute(request) }
             .apply {
                 value
                     .onSuccess { transferId ->
@@ -26,16 +26,13 @@ class TimeMeasuredTransferExecutor(
                                 "transferId: ${transferId.value}, " +
                                 "duration: $duration)"
                         }
-                    }
-                    .onFailure { cause ->
+                    }.onFailure { cause ->
                         meterRegistry.timer(TRANSFER_EXECUTION_FAILED_TIMER).record(duration.toJavaDuration())
                         logger.trace(cause) {
                             "Recorded failure transfer execution result (request: $request, duration: $duration)"
                         }
                     }
-            }
-            .value
-    }
+            }.value
 
     companion object {
         const val TRANSFER_EXECUTION_SUCCEED_TIMER = "transfer.execute.success.timer"
@@ -43,6 +40,4 @@ class TimeMeasuredTransferExecutor(
     }
 }
 
-fun TransferExecutor.withTimeMeasured(meterRegistry: MeterRegistry): TransferExecutor {
-    return TimeMeasuredTransferExecutor(this, meterRegistry)
-}
+fun TransferExecutor.withTimeMeasured(meterRegistry: MeterRegistry): TransferExecutor = TimeMeasuredTransferExecutor(this, meterRegistry)

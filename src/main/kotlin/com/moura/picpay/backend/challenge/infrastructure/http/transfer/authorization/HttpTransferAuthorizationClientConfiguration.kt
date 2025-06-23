@@ -14,8 +14,7 @@ class HttpTransferAuthorizationClientConfiguration {
         webClientBuilder: WebClient.Builder,
         authorizationClientProperties: AuthorizationClientProperties,
         meterRegistry: MeterRegistry,
-    ): TransferAuthorizationClient {
-        return HttpTransferAuthorizationClient(webClientBuilder, authorizationClientProperties)
+    ): TransferAuthorizationClient =
+        HttpTransferAuthorizationClient(webClientBuilder, authorizationClientProperties)
             .decorateWithMetrics(meterRegistry)
-    }
 }

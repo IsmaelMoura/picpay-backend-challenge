@@ -15,12 +15,11 @@ import org.springframework.stereotype.Component
 class CustomizedUserRepositoryImpl(
     private val template: R2dbcEntityTemplate,
 ) : CustomizedUserRepository {
-    override fun fetchAllUsers(request: FetchUsersQueryParametersRequest): Flow<UserEntity> {
-        return template.select(Query.query(createCriteria(request)), UserEntity::class.java).asFlow()
-    }
+    override fun fetchAllUsers(request: FetchUsersQueryParametersRequest): Flow<UserEntity> =
+        template.select(Query.query(createCriteria(request)), UserEntity::class.java).asFlow()
 
-    private fun createCriteria(request: FetchUsersQueryParametersRequest): CriteriaDefinition {
-        return buildSet {
+    private fun createCriteria(request: FetchUsersQueryParametersRequest): CriteriaDefinition =
+        buildSet {
             request.countrySpecificIds
                 ?.let { ids ->
                     add(Criteria.where(COUNTRY_SPECIFIC_ID_COLUMN_NAME).isIn(ids))
@@ -28,11 +27,11 @@ class CustomizedUserRepositoryImpl(
             request.fullNames
                 ?.filter { it.isNotBlank() }
                 ?.map { name ->
-                    Criteria.where(FULL_NAME_COLUMN_NAME)
+                    Criteria
+                        .where(FULL_NAME_COLUMN_NAME)
                         .like(name + LIKE_OPERATOR)
                         .ignoreCase(true)
-                }
-                ?.combineWithOr()
+                }?.combineWithOr()
                 ?.let(::add)
             request.emails?.let { emails ->
                 add(Criteria.where(EMAIL_COLUMN_NAME).isIn(emails))
@@ -41,15 +40,12 @@ class CustomizedUserRepositoryImpl(
                 add(Criteria.where(TYPE_COLUMN_NAME).isEqual(type))
             }
         }.combineWithAnd()
-    }
 
-    private fun Collection<Criteria>.combineWithOr(): Criteria {
-        return reduceOrNull { combined, criteria -> combined.or(criteria) } ?: Criteria.empty()
-    }
+    private fun Collection<Criteria>.combineWithOr(): Criteria =
+        reduceOrNull { combined, criteria -> combined.or(criteria) } ?: Criteria.empty()
 
-    private fun Collection<Criteria>.combineWithAnd(): Criteria {
-        return reduceOrNull { combined, criteria -> combined.and(criteria) } ?: Criteria.empty()
-    }
+    private fun Collection<Criteria>.combineWithAnd(): Criteria =
+        reduceOrNull { combined, criteria -> combined.and(criteria) } ?: Criteria.empty()
 
     private companion object {
         const val COUNTRY_SPECIFIC_ID_COLUMN_NAME = "countrySpecificId"

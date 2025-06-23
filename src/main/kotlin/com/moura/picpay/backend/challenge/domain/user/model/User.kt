@@ -12,13 +12,9 @@ data class User(
     val type: UserType,
     val balance: BigDecimal,
 ) {
-    fun withIncreasedBalance(amount: BigDecimal): User {
-        return copy(balance = balance + amount)
-    }
+    fun withIncreasedBalance(amount: BigDecimal): User = copy(balance = balance + amount)
 
-    fun withDecreasedBalance(amount: BigDecimal): User {
-        return copy(balance = balance - amount)
-    }
+    fun withDecreasedBalance(amount: BigDecimal): User = copy(balance = balance - amount)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
